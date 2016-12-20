@@ -6,9 +6,9 @@ use Becklyn\Interfaces\LanguageInterface;
 
 
 /**
- * Describes searchable entities, that are translated
+ * Describes searchable entities, that are localized
  */
-interface TranslatedSearchableEntityInterface extends SearchableEntityInterface
+interface LocalizedSearchableEntityInterface extends SearchableEntityInterface
 {
     /**
      * Returns the language of the entity
