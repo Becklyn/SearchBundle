@@ -1,0 +1,37 @@
+services:
+
+
+    # ------------------------------------------------------------------------------------------------------------------------
+    # Metadata
+    # ------------------------------------------------------------------------------------------------------------------------
+    becklyn.search.metadata:
+        class: Becklyn\SearchBundle\Metadata\Metadata
+        arguments:
+            - '@cache.system'
+
+    becklyn.search.metadata.generator:
+        class: Becklyn\SearchBundle\Metadata\MetadataGenerator
+        arguments:
+            - '@becklyn.search.language.class_finder'
+            - '@becklyn.search.metadata.extractor.class'
+            - '@becklyn.search.metadata'
+
+    becklyn.search.metadata.extractor.class:
+        class: Becklyn\SearchBundle\Metadata\Extractor\ClassMetadataExtractor
+        arguments:
+            - '@becklyn.search.language.property_collector'
+            - '@cache.app'
+        public: false
+
+
+
+    # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Language integration
+    # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    becklyn.search.language.class_finder:
+        class: Becklyn\SearchBundle\LanguageIntegration\ClassFinder
+        public: false
+
+    becklyn.search.language.property_collector:
+        class: Becklyn\SearchBundle\LanguageIntegration\AccessiblePropertyCollector
+        public: false
