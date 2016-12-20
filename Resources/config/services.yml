@@ -28,6 +28,13 @@ services:
             - [] # set via configuration
         public: false
 
+    becklyn.search.index.configuration.language:
+        class: Becklyn\SearchBundle\Metadata\Configuration\LanguageConfiguration
+        arguments:
+            - ~  # set via configuration
+            - [] # set via configuration
+        public: false
+
 
     # ------------------------------------------------------------------------------------------------------------------------
     # Metadata

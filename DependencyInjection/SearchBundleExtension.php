@@ -32,11 +32,11 @@ class SearchBundleExtension extends Extension
         $container->getDefinition("becklyn.search.elasticsearch")
             ->replaceArgument(0, $config["server"])
             ->replaceArgument(1, $config["index"]);
-        //
-        // // set config for elasticsearch client
-        // $container->getDefinition("search.metadata.language")
-        //     ->replaceArgument(0, $config["index"])
-        //     ->replaceArgument(1, $config["languages"]);
+
+        // set config for elasticsearch client
+        $container->getDefinition("search.metadata.language")
+            ->replaceArgument(0, $config["index"])
+            ->replaceArgument(1, $config["languages"]);
     }
 
 

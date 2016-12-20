@@ -3,6 +3,7 @@
 namespace Becklyn\SearchBundle\DependencyInjection;
 
 use Becklyn\SearchBundle\SearchBundle;
+use SearchBundle\Metadata\Configuration\LanguageConfiguration;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -28,9 +29,12 @@ class SearchBundleConfiguration implements ConfigurationInterface
                     ->cannotBeEmpty()
                     ->validate()
                     ->ifTrue(function ($value) {
-                            return 1 !== substr_count($value, '{language}');
+                            return 1 !== substr_count($value, LanguageConfiguration::INDEX_LANGUAGE_PLACEHOLDER);
                         })
-                        ->thenInvalid("The index must use exactly one language placeholder \'{language}\'.")
+                        ->thenInvalid(sprintf(
+                            "The index must use exactly one language placeholder '%s'.",
+                            LanguageConfiguration::INDEX_LANGUAGE_PLACEHOLDER
+                        ))
                     ->end()
                 ->end()
                 ->arrayNode("filters")
