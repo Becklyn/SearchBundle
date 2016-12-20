@@ -9,6 +9,19 @@ namespace Becklyn\SearchBundle\LanguageIntegration;
 class AccessiblePropertyCollector
 {
     /**
+     * @var PropertyAccessChecker
+     */
+    private $propertyAccessChecker;
+
+
+
+    public function __construct ()
+    {
+        $this->propertyAccessChecker = new PropertyAccessChecker();
+    }
+
+
+    /**
      * Searches all possible properties defined in the complete class hierarchy that are accessible
      *
      * @param \ReflectionClass $class
@@ -23,13 +36,12 @@ class AccessiblePropertyCollector
         };
 
         $candidates = $this->fetchCandidates($class, $items, []);
-        $checker = new PropertyAccessChecker($class);
 
         return array_filter(
             $candidates,
-            function (\ReflectionProperty $property) use ($checker)
+            function (\ReflectionProperty $property)
             {
-                return $checker->isAccessible($property);
+                return $this->propertyAccessChecker->isAccessible($property);
             }
         );
     }
