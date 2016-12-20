@@ -9,6 +9,13 @@ services:
             - '@becklyn.search.elasticsearch'
 
 
+    becklyn.search.index.configuration.analysis:
+        class: Becklyn\SearchBundle\Index\Configuration\AnalysisConfiguration
+        arguments:
+            - [] # set via configuration
+            - [] # set via configuration
+        public: false
+
     # ------------------------------------------------------------------------------------------------------------------------
     # Metadata
     # ------------------------------------------------------------------------------------------------------------------------
