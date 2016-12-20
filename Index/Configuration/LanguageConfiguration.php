@@ -29,7 +29,7 @@ class LanguageConfiguration
      * @var array
      */
     private $unlocalizedData = [
-        "analyzer" => "default.analyzer.de",
+        "analyzer" => "default_analyzer_de",
     ];
 
 

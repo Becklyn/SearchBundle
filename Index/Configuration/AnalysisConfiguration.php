@@ -16,11 +16,11 @@ class AnalysisConfiguration
      * @var array
      */
     private $filters = [
-        "default.filter.de" => [
+        "default_filter_de" => [
             "type" => "stemmer",
             "name" => "light_german",
         ],
-        "default.filter.shingle" => [
+        "default_filter_shingle" => [
             "min_shingle_size" => 2,
             "max_shingle_size" => 5,
             "type" => "shingle",
@@ -28,14 +28,14 @@ class AnalysisConfiguration
     ];
 
     private $analyzers = [
-        "default.analyzer.de" => [
+        "default_analyzer_de" => [
             "tokenizer" => "lowercase",
             "filter" => [
                 "standard",
                 "lowercase",
-                "default.filter.de",
+                "default_filter_de",
                 "asciifolding",
-                "default.filter.shingle",
+                "default_filter_shingle",
             ],
             "type" => "custom",
         ],
@@ -102,6 +102,8 @@ class AnalysisConfiguration
                 $name
             ));
         }
+
+        unset($configuration["char_filter"]);
 
         $configuration["type"] = "custom";
         $this->analyzers[$name] = $configuration;
