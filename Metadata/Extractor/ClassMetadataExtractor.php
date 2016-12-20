@@ -66,7 +66,7 @@ class ClassMetadataExtractor
             return null;
         }
 
-        if ($class->implementsInterface(SearchableEntityInterface::class))
+        if (!$class->implementsInterface(SearchableEntityInterface::class))
         {
             throw new InvalidSearchConfigurationException(sprintf(
                 "The for search annotated class '%s' must implemented the %s.",
