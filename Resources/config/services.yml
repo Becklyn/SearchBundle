@@ -20,6 +20,20 @@ services:
         tags:
             - { name: console.command }
 
+
+    # ------------------------------------------------------------------------------------------------------------------------
+    # Doctrine integration
+    # ------------------------------------------------------------------------------------------------------------------------
+    becklyn.search.doctrine.event_subscriber:
+       class: Becklyn\SearchBundle\Doctrine\DoctrineListener
+       arguments:
+           - '@becklyn.search.metadata'
+           - '@becklyn.search.indexer'
+       tags:
+           - { name: doctrine.event_subscriber }
+       public: false
+
+
     # ------------------------------------------------------------------------------------------------------------------------
     # Elasticsearch client
     # ------------------------------------------------------------------------------------------------------------------------
