@@ -7,6 +7,19 @@ services:
             - '@becklyn.search.metadata'
 
 
+    becklyn.search.command.index:
+        class: Becklyn\SearchBundle\Command\IndexCommand
+        arguments:
+            - '@becklyn.search.metadata'
+            - '@becklyn.search.metadata.generator'
+            - '@kernel'
+            - '@becklyn.search.index.mapping'
+            - '@becklyn.search.indexer'
+            - '@becklyn.search.entity_loader'
+            - '@doctrine'
+        tags:
+            - { name: console.command }
+
     # ------------------------------------------------------------------------------------------------------------------------
     # Elasticsearch client
     # ------------------------------------------------------------------------------------------------------------------------
