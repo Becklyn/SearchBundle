@@ -2,6 +2,7 @@
 
 namespace Becklyn\SearchBundle\DependencyInjection;
 
+use Becklyn\SearchBundle\SearchBundle;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -14,7 +15,7 @@ class SearchBundleConfiguration implements ConfigurationInterface
     public function getConfigTreeBuilder ()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('becklyn_search');
+        $rootNode = $treeBuilder->root(SearchBundle::BUNDLE_ALIAS);
 
         $rootNode
             ->children()

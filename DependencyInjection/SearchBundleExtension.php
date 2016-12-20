@@ -2,7 +2,7 @@
 
 namespace Becklyn\SearchBundle\DependencyInjection;
 
-
+use Becklyn\SearchBundle\SearchBundle;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -37,5 +37,15 @@ class SearchBundleExtension extends Extension
         // $container->getDefinition("search.metadata.language")
         //     ->replaceArgument(0, $config["index"])
         //     ->replaceArgument(1, $config["languages"]);
+    }
+
+
+
+    /**
+     * @inheritdoc
+     */
+    public function getAlias ()
+    {
+        return SearchBundle::BUNDLE_ALIAS;
     }
 }

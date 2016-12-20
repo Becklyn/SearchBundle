@@ -8,11 +8,17 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class SearchBundle extends Bundle
 {
+    const BUNDLE_ALIAS = "becklyn_search";
+
     /**
      * @inheritdoc
      */
-    protected function getContainerExtensionClass ()
+    public function getContainerExtension ()
     {
-        return SearchBundleExtension::class;
+        if (null === $this->extension) {
+            $this->extension = new SearchBundleExtension();
+        }
+
+        return $this->extension;
     }
 }
