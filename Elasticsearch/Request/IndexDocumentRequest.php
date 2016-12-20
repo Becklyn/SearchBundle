@@ -10,6 +10,9 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 
+/**
+ * A request to index the given document
+ */
 class IndexDocumentRequest extends ElasticsearchRequest
 {
     /**
