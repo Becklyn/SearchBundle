@@ -1,6 +1,6 @@
 {
     "name":         "becklyn/search-bundle",
-    "description":  "Simply and automatically power your Symfony projects with an Elasticsearch.",
+    "description":  "Simply and automatically power your Symfony projects with Elasticsearch.",
     "type":         "symfony-bundle",
     "homepage":     "https://github.com/Becklyn/SearchBundle",
     "license":      "BSD-3-Clause",
