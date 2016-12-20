@@ -62,10 +62,6 @@ class ElasticsearchClient
      */
     public function sendRequest (ElasticsearchRequest $request)
     {
-        dump("{$request->getActionNamespace()}::{$request->getAction()}()");
-        dump($request->getData());
-        // return;
-
         try
         {
             $client = $this->client;
