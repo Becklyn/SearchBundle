@@ -154,7 +154,7 @@ class IndexCreateRequest extends ElasticsearchRequest
                 "enabled" => true,
             ],
             "properties" => [
-                ElasticsearchClient::TIMESTAMP_FIELD => [
+                ElasticsearchClient::ENTITY_TIMESTAMP_FIELD => [
                     "type" => "date",
                     "format" => "yyyy-MM-dd HH:mm:ss",
                 ],

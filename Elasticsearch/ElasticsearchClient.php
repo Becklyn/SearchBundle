@@ -13,7 +13,7 @@ use Becklyn\SearchBundle\Metadata\SearchItem;
 class ElasticsearchClient
 {
     const ENTITY_ID_FIELD = "entity-id";
-    const TIMESTAMP_FIELD = "search-timestamp";
+    const ENTITY_TIMESTAMP_FIELD = "entity-timestamp";
 
     /**
      * @var Client
