@@ -12,6 +12,7 @@
         "psr-4": { "Becklyn\\SearchBundle\\": "" }
     },
     "require": {
-        "php": "^7.0"
+        "php": "^7.0",
+        "becklyn/interfaces": "dev-master#1af87fdb5224c5c7c44590091d148767d6943a37"
     }
 }
