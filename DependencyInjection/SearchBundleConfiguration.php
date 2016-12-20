@@ -2,8 +2,8 @@
 
 namespace Becklyn\SearchBundle\DependencyInjection;
 
+use Becklyn\SearchBundle\Index\Configuration\LanguageConfiguration;
 use Becklyn\SearchBundle\SearchBundle;
-use SearchBundle\Metadata\Configuration\LanguageConfiguration;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -48,7 +48,6 @@ class SearchBundleConfiguration implements ConfigurationInterface
                         ->end()
                         ->ignoreExtraKeys(false)
                     ->end()
-                    ->defaultValue([])
                 ->end()
                 ->arrayNode("analyzers")
                     ->useAttributeAsKey("name")
@@ -67,7 +66,7 @@ class SearchBundleConfiguration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-                ->arrayNode("languages")
+                ->arrayNode("localized")
                     ->useAttributeAsKey("code")
                     ->prototype("array")
                         ->children()
@@ -75,7 +74,12 @@ class SearchBundleConfiguration implements ConfigurationInterface
                             ->end()
                         ->end()
                     ->end()
-                    ->defaultValue([])
+                ->end()
+                ->arrayNode("unlocalized")
+                    ->children()
+                        ->scalarNode("analyzer")
+                        ->end()
+                    ->end()
                 ->end()
             ->end();
 

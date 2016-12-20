@@ -34,9 +34,10 @@ class SearchBundleExtension extends Extension
             ->replaceArgument(1, $config["analyzers"]);
 
         // set config for elasticsearch client
-        $container->getDefinition("search.metadata.language")
+        $container->getDefinition("becklyn.search.index.configuration.language")
             ->replaceArgument(0, $config["index"])
-            ->replaceArgument(1, $config["languages"]);
+            ->replaceArgument(1, $config["localized"])
+            ->replaceArgument(2, $config["unlocalized"] ?? []);
     }
 
 
