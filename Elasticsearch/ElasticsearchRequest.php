@@ -2,6 +2,10 @@
 
 namespace Becklyn\SearchBundle\Elasticsearch;
 
+
+/**
+ * Base class for requests to elasticsearch
+ */
 abstract class ElasticsearchRequest
 {
     /**

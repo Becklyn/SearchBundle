@@ -10,6 +10,8 @@ use Becklyn\SearchBundle\Metadata\Metadata;
 use Becklyn\SearchBundle\Metadata\SearchItem;
 
 
+/**
+ * Wrapper around the elasticsearch API
 class ElasticsearchClient
 {
     const ENTITY_ID_FIELD = "entity-id";
