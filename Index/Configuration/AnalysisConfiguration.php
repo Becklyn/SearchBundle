@@ -72,7 +72,7 @@ class AnalysisConfiguration
      */
     public function registerFilter (string $name, array $configuration)
     {
-        if (array_key_exists($name, $this->filters))
+        if (!array_key_exists($name, $this->filters))
         {
             throw new InvalidSearchConfigurationException(sprintf(
                 "There already is a filter with name '%s' registered.",
@@ -95,7 +95,7 @@ class AnalysisConfiguration
      */
     public function registerAnalyzer (string $name, array $configuration)
     {
-        if (array_key_exists($name, $this->analyzers))
+        if (!array_key_exists($name, $this->analyzers))
         {
             throw new InvalidSearchConfigurationException(sprintf(
                 "There already is an analyzer with name '%s' registered.",
