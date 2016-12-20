@@ -1,6 +1,6 @@
 <?php
 
-namespace SearchBundle;
+namespace Becklyn\SearchBundle;
 
 use Becklyn\SearchBundle\DependencyInjection\SearchBundleExtension;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
