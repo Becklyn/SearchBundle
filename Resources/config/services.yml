@@ -1,5 +1,12 @@
 services:
 
+    becklyn.search.indexer:
+        class: Becklyn\SearchBundle\Search\SearchIndexer
+        arguments:
+            - '@becklyn.search.elasticsearch'
+            - '@becklyn.search.metadata'
+
+
     # ------------------------------------------------------------------------------------------------------------------------
     # Elasticsearch client
     # ------------------------------------------------------------------------------------------------------------------------

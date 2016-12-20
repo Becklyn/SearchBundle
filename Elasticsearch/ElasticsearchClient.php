@@ -2,16 +2,16 @@
 
 namespace Becklyn\SearchBundle\Elasticsearch;
 
-use Becklyn\SearchBundle\Index\Data\IndexData;
+use Becklyn\SearchBundle\Elasticsearch\Request\IndexDocumentRequest;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
 use Becklyn\SearchBundle\Metadata\Metadata;
-use Becklyn\SearchBundle\Metadata\SearchItem;
 
 
 /**
  * Wrapper around the elasticsearch API
+ */
 class ElasticsearchClient
 {
     const ENTITY_ID_FIELD = "entity-id";
@@ -54,47 +54,83 @@ class ElasticsearchClient
 
 
     /**
-     * Indexes the given document.
+     * Sends the given request to elastic search
      *
-     * @param IndexData $indexData
+     * @param ElasticsearchRequest $request
+     *
+     * @throws Missing404Exception
      */
-    public function indexDocument (IndexData $indexData)
+    public function sendRequest (ElasticsearchRequest $request)
     {
-        $this->client->index([
-            "index" => $this->index,
-            "type" => $indexData->getType(),
-            "id" => $indexData->getGlobalItemId(),
-            "body" => $indexData->getSerializedData(),
-        ]);
+        dump("{$request->getActionNamespace()}::{$request->getAction()}()");
+        dump($request->getData());
+        // return;
+
+        try
+        {
+            $client = $this->client;
+            $namespace = $request->getActionNamespace();
+            $action = $request->getAction();
+
+            if (null !== $namespace)
+            {
+                $client = $client->{$namespace}();
+            }
+
+            $client->{$action}($request->getData());
+        }
+        catch (Missing404Exception $exception)
+        {
+            if (!$request->ignoreMissing())
+            {
+                throw $exception;
+            }
+        }
     }
 
 
 
     /**
-     * Indexes the given documents in bulk
+     * Sends all given requests to elastic search
      *
-     * @param IndexData[] $indexData
+     * @param ElasticsearchRequest[] $requests
      */
-    public function bulkIndexDocuments (array $indexData)
+    public function sendRequests (array $requests)
+    {
+        foreach ($requests as $request)
+        {
+            $this->sendRequest($request);
+        }
+    }
+
+
+
+    /**
+     * Sends index requests in bulk
+     *
+     * @param IndexDocumentRequest[] $requests
+     */
+    public function sendBulkIndexRequests (array $requests)
     {
         $currentBulk = [];
-        $maxIndex = count($indexData) - 1;
+        $maxIndex = count($requests) - 1;
 
         for ($i = 0; $i <= $maxIndex; $i++)
         {
-            $currentItem = $indexData[$i];
+            $request = $requests[$i];
+            $data = $request->getData();
 
             // add header
             $currentBulk[] = [
                 "index" => [
-                    "_index" => $this->index,
-                    "_type" => $currentItem->getType(),
-                    "_id" => $currentItem->getGlobalItemId(),
+                    "_index" => $data["index"],
+                    "_type" => $data["type"],
+                    "_id" => $data["id"],
                 ],
             ];
 
             // add data
-            $currentBulk[] = $currentItem->getSerializedData();
+            $currentBulk[] = $data["body"];
 
             // every 1000 items -> send
             if ($i % 1000 === 0 || $i >= $maxIndex)
@@ -104,139 +140,6 @@ class ElasticsearchClient
                 ]);
                 $currentBulk = [];
             }
-        }
-    }
-
-
-
-    /**
-     * Regenerates the index
-     */
-    public function regenerateIndex ()
-    {
-        if ($this->indexExists())
-        {
-            $this->client->indices()->delete([
-                "index" => $this->index,
-            ]);
-        }
-
-        $this->createIndex();
-    }
-
-
-
-    /**
-     * Creates the index, if it doesn't exist
-     */
-    private function createIndex ()
-    {
-        if (!$this->indexExists())
-        {
-            $mappings = [];
-
-            foreach ($this->metadata->getAllItems() as $item)
-            {
-                $mappings[$item->getElasticsearchType()] = $this->buildMappingForItem($item);
-            }
-
-            $this->client->indices()->create([
-                "index" => $this->index,
-                "body" => [
-                    "settings" => [
-                        "index" => [
-                            "number_of_shards" => 1,
-                            "number_of_replicas" => 1,
-                        ],
-                        "analysis" => [
-                            "analyzer" => [
-                                "app_analyzer" => [
-                                    "tokenizer" => "lowercase",
-                                    "filter" => [
-                                        "standard",
-                                        "lowercase",
-                                        "german_stemmer",
-                                        "asciifolding",
-                                        "shingle_filter",
-                                    ],
-                                    "type" => "custom",
-                                ],
-                            ],
-                            "filter" => [
-                                "german_stemmer" => [
-                                    "type" => "stemmer",
-                                    "name" => "light_german",
-                                ],
-                                "shingle_filter" => [
-                                    "min_shingle_size" => 2,
-                                    "max_shingle_size" => 5,
-                                    "type" => "shingle",
-                                ],
-                            ],
-                        ],
-                    ],
-                    "mappings" => $mappings,
-                ]
-            ]);
-        }
-    }
-
-
-
-    /**
-     * Builds the mapping for the given search item
-     *
-     * @param SearchItem $item
-     *
-     * @return array
-     */
-    private function buildMappingForItem (SearchItem $item) : array
-    {
-        $mapping = [
-            "_source" => [
-                "enabled" => true,
-            ],
-            "properties" => [
-                self::TIMESTAMP_FIELD => [
-                    "type" => "date",
-                    "format" => "yyyy-MM-dd HH:mm:ss",
-                ],
-                self::ENTITY_ID_FIELD => [
-                    "type" => "integer",
-                ],
-            ],
-
-        ];
-
-        foreach ($item->getFields() as $field)
-        {
-            $mapping["properties"][$field->getElasticsearchFieldName()] = [
-                "type" => "text",
-                "analyzer" => "app_analyzer",
-                "term_vector" => "with_positions_offsets",
-            ];
-        }
-
-        return $mapping;
-    }
-
-
-
-    /**
-     * Checks whether the index exists
-     *
-     * @return bool
-     */
-    private function indexExists () : bool
-    {
-        try
-        {
-            $this->client->indices()->get(["index" => $this->index]);
-            return true;
-        }
-        catch (Missing404Exception $e)
-        {
-            return false;
         }
     }
 
