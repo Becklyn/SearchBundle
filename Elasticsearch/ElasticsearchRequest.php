@@ -7,19 +7,19 @@ abstract class ElasticsearchRequest
     /**
      * @var string
      */
-    protected $index;
+    private $index;
 
 
     /**
      * @var string
      */
-    protected $action;
+    private $action;
 
 
     /**
      * @var string|null
      */
-    protected $actionNamespace;
+    private $actionNamespace;
 
 
 
