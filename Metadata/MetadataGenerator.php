@@ -53,7 +53,6 @@ class MetadataGenerator
      */
     public function rebuildMetadata (array $rootNamespaces)
     {
-        $this->metadata->clear();
         $classes = $this->classFinder->findClassesInDirectories($rootNamespaces);
 
         $discoveredSearchItems = [];
