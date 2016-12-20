@@ -6,7 +6,6 @@ services:
             - '@becklyn.search.elasticsearch'
             - '@becklyn.search.metadata'
 
-
     becklyn.search.command.index:
         class: Becklyn\SearchBundle\Command\IndexCommand
         arguments:
@@ -46,6 +45,17 @@ services:
         public: false
 
 
+    # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Entity loader
+    # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    becklyn.search.entity_loader:
+        class: Becklyn\SearchBundle\Loader\EntityLoader
+        arguments:
+            - '@doctrine'
+            - '@service_container'
+        public: false
+
+
     # ------------------------------------------------------------------------------------------------------------------------
     # Index
     # ------------------------------------------------------------------------------------------------------------------------
@@ -75,6 +85,18 @@ services:
         public: false
 
 
+    # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Language integration
+    # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    becklyn.search.language.class_finder:
+        class: Becklyn\SearchBundle\LanguageIntegration\ClassFinder
+        public: false
+
+    becklyn.search.language.property_collector:
+        class: Becklyn\SearchBundle\LanguageIntegration\AccessiblePropertyCollector
+        public: false
+
+
     # ------------------------------------------------------------------------------------------------------------------------
     # Metadata
     # ------------------------------------------------------------------------------------------------------------------------
@@ -97,29 +119,4 @@ services:
         arguments:
             - '@becklyn.search.language.property_collector'
             - '@cache.app'
-        public: false
-
-
-
-    # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    # Language integration
-    # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    becklyn.search.language.class_finder:
-        class: Becklyn\SearchBundle\LanguageIntegration\ClassFinder
-        public: false
-
-    becklyn.search.language.property_collector:
-        class: Becklyn\SearchBundle\LanguageIntegration\AccessiblePropertyCollector
-        public: false
-
-
-
-    # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    # Entity loader
-    # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    becklyn.search.entity_loader:
-        class: Becklyn\SearchBundle\Loader\EntityLoader
-        arguments:
-            - '@doctrine'
-            - '@service_container'
         public: false
