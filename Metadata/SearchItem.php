@@ -32,7 +32,7 @@ class SearchItem
     /**
      * @var bool
      */
-    private $translated;
+    private $localized;
 
 
     /**
@@ -45,14 +45,14 @@ class SearchItem
     /**
      * @param string      $fqcn
      * @param string      $elasticsearchType
-     * @param bool        $translated
+     * @param bool        $localized
      * @param string|null $loader
      */
-    public function __construct (string $fqcn, string $elasticsearchType, bool $translated, string $loader = null)
+    public function __construct (string $fqcn, string $elasticsearchType, bool $localized, string $loader = null)
     {
         $this->fqcn = $fqcn;
         $this->elasticsearchType = $elasticsearchType;
-        $this->translated = $translated;
+        $this->localized = $localized;
         $this->loader = $loader;
     }
 
@@ -90,9 +90,9 @@ class SearchItem
     /**
      * @return bool
      */
-    public function isTranslated () : bool
+    public function isLocalized () : bool
     {
-        return $this->translated;
+        return $this->localized;
     }
 
 

@@ -141,7 +141,7 @@ class Metadata
             $this->getAllItems(),
             function (SearchItem $item) use ($localized)
             {
-                return $localized === $item->isTranslated();
+                return $localized === $item->isLocalized();
             }
         );
     }
