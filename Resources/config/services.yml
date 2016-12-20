@@ -42,6 +42,7 @@ services:
             - '@becklyn.search.metadata'
             - '@becklyn.search.index.configuration.analysis'
             - '@becklyn.search.index.configuration.language'
+        public: false
 
 
     becklyn.search.index.configuration.analysis:
@@ -67,6 +68,7 @@ services:
         class: Becklyn\SearchBundle\Metadata\Metadata
         arguments:
             - '@cache.system'
+        public: false
 
     becklyn.search.metadata.generator:
         class: Becklyn\SearchBundle\Metadata\MetadataGenerator
@@ -74,6 +76,7 @@ services:
             - '@becklyn.search.language.class_finder'
             - '@becklyn.search.metadata.extractor.class'
             - '@becklyn.search.metadata'
+        public: false
 
     becklyn.search.metadata.extractor.class:
         class: Becklyn\SearchBundle\Metadata\Extractor\ClassMetadataExtractor
@@ -105,3 +108,4 @@ services:
         arguments:
             - '@doctrine'
             - '@service_container'
+        public: false
