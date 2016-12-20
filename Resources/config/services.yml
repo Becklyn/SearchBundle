@@ -19,6 +19,9 @@ services:
         class: Becklyn\SearchBundle\Index\IndexMapping
         arguments:
             - '@becklyn.search.elasticsearch'
+            - '@becklyn.search.metadata'
+            - '@becklyn.search.index.configuration.analysis'
+            - '@becklyn.search.index.configuration.language'
 
 
     becklyn.search.index.configuration.analysis:
@@ -29,9 +32,10 @@ services:
         public: false
 
     becklyn.search.index.configuration.language:
-        class: Becklyn\SearchBundle\Metadata\Configuration\LanguageConfiguration
+        class: Becklyn\SearchBundle\Index\Configuration\LanguageConfiguration
         arguments:
             - ~  # set via configuration
+            - [] # set via configuration
             - [] # set via configuration
         public: false
 
