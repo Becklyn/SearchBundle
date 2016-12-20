@@ -1,0 +1,17 @@
+{
+    "name":         "becklyn/search-bundle",
+    "description":  "Simply and automatically power your Symfony projects with an Elasticsearch.",
+    "type":         "symfony-bundle",
+    "homepage":     "https://github.com/Becklyn/SearchBundle",
+    "license":      "BSD-3-Clause",
+    "authors": [{
+        "name":     "Becklyn Studios",
+        "homepage": "http://becklyn.com/"
+    }],
+    "autoload": {
+        "psr-4": { "Becklyn\\SearchBundle\\": "" }
+    },
+    "require": {
+        "php": "^7.0"
+    }
+}
