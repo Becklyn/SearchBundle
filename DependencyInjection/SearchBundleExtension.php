@@ -23,15 +23,15 @@ class SearchBundleExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 
-        // set config for metadata analysis
-        $container->getDefinition("becklyn.search.index.configuration.analysis")
-            ->replaceArgument(0, $config["filters"])
-            ->replaceArgument(1, $config["analyzers"]);
-
         // set config for elasticsearch client
         $container->getDefinition("becklyn.search.elasticsearch")
             ->replaceArgument(0, $config["server"])
             ->replaceArgument(1, $config["index"]);
+
+        // set config for metadata analysis
+        $container->getDefinition("becklyn.search.index.configuration.analysis")
+            ->replaceArgument(0, $config["filters"])
+            ->replaceArgument(1, $config["analyzers"]);
 
         // set config for elasticsearch client
         $container->getDefinition("search.metadata.language")
