@@ -101,4 +101,48 @@ class Metadata
     {
         return $this->items;
     }
+
+
+
+    /**
+     * Returns all localized items
+     *
+     * @return SearchItem[]
+     */
+    public function getAllLocalizedItems () : array
+    {
+        return $this->filterItems(true);
+    }
+
+
+
+    /**
+     * Returns all unlocalized items
+     *
+     * @return SearchItem[]
+     */
+    public function getAllUnlocalizedItems () : array
+    {
+        return $this->filterItems(false);
+    }
+
+
+
+    /**
+     * Filters all items to only include (un)localized ones
+     *
+     * @param bool $localized
+     *
+     * @return SearchItem[]
+     */
+    private function filterItems (bool $localized)
+    {
+        return array_filter(
+            $this->getAllItems(),
+            function (SearchItem $item) use ($localized)
+            {
+                return $localized === $item->isTranslated();
+            }
+        );
+    }
 }
