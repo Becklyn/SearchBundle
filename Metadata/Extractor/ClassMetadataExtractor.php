@@ -5,7 +5,7 @@ namespace Becklyn\SearchBundle\Metadata\Extractor;
 use Becklyn\SearchBundle\Entity\SearchableEntityInterface;
 use Becklyn\SearchBundle\Exception\InvalidSearchConfigurationException;
 use Doctrine\Common\Annotations\AnnotationReader;
-use Becklyn\SearchBundle\Entity\TranslatedSearchableEntityInterface;
+use Becklyn\SearchBundle\Entity\LocalizedSearchableEntityInterface;
 use Becklyn\SearchBundle\LanguageIntegration\AccessiblePropertyCollector;
 use Becklyn\SearchBundle\Mapping\Field;
 use Becklyn\SearchBundle\Mapping\Item;
@@ -78,7 +78,7 @@ class ClassMetadataExtractor
         $item = new SearchItem(
             $class->getName(),
             $annotation->index ?: $this->generateElasticsearchTypeName($class),
-            $class->implementsInterface(TranslatedSearchableEntityInterface::class),
+            $class->implementsInterface(LocalizedSearchableEntityInterface::class),
             $annotation->loader
         );
 
