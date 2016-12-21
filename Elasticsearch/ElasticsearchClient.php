@@ -100,9 +100,9 @@ class ElasticsearchClient
     {
         $results = [];
 
-        foreach ($requests as $request)
+        foreach ($requests as $index => $request)
         {
-            $results[] = $this->sendRequest($request);
+            $results[$index] = $this->sendRequest($request);
         }
 
         return $results;
