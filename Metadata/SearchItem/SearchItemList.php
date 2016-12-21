@@ -2,6 +2,7 @@
 
 namespace Becklyn\SearchBundle\Metadata\SearchItem;
 
+use Becklyn\SearchBundle\Exception\UnknownItemException;
 use Becklyn\SearchBundle\Metadata\SearchItem;
 
 
@@ -16,6 +17,12 @@ class SearchItemList implements \IteratorAggregate
     private $searchItems;
 
 
+    /**
+     * @var SearchItem[]
+     */
+    private $fqcnMap = [];
+
+
 
     /**
      * @param SearchItem[] $searchItems
@@ -23,6 +30,11 @@ class SearchItemList implements \IteratorAggregate
     public function __construct (array $searchItems)
     {
         $this->searchItems = $searchItems;
+
+        foreach ($searchItems as $searchItem)
+        {
+            $this->fqcnMap[$searchItem->getFqcn()] = $searchItem;
+        }
     }
 
 
@@ -32,7 +44,7 @@ class SearchItemList implements \IteratorAggregate
      *
      * @return SearchItem[]
      */
-    public function getAllLocalizedItems () : array
+    public function getLocalizedItems () : array
     {
         return $this->filterItems(true);
     }
@@ -44,7 +56,7 @@ class SearchItemList implements \IteratorAggregate
      *
      * @return SearchItem[]
      */
-    public function getAllUnlocalizedItems () : array
+    public function getUnlocalizedItems () : array
     {
         return $this->filterItems(false);
     }
@@ -77,5 +89,40 @@ class SearchItemList implements \IteratorAggregate
     public function getIterator ()
     {
         return new \ArrayIterator($this->searchItems);
+    }
+
+
+
+    /**
+     * Filters the item list for the given classes.
+     * If no class is given, all items are returned.
+     *
+     * @param array $itemClasses
+     *
+     * @return SearchItemList
+     * @throws UnknownItemException
+     */
+    public function filterByClass (array $itemClasses) : SearchItemList
+    {
+        if (empty($itemClasses))
+        {
+            return $this;
+        }
+
+        $filtered = [];
+
+        foreach ($itemClasses as $itemClass)
+        {
+            if (!isset($this->fqcnMap[$itemClass]))
+            {
+                throw new UnknownItemException($itemClass);
+            }
+
+            $item = $this->fqcnMap[$itemClass];
+
+            $filtered[$item->getElasticsearchType()] = $item;
+        }
+
+        return new SearchItemList($filtered);
     }
 }

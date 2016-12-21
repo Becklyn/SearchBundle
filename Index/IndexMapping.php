@@ -104,8 +104,8 @@ class IndexMapping
         foreach ($this->languageConfiguration->getAllLanguages() as $language)
         {
             $items = $language !== null
-                ? $allItems->getAllLocalizedItems()
-                : $allItems->getAllUnlocalizedItems();
+                ? $allItems->getLocalizedItems()
+                : $allItems->getUnlocalizedItems();
 
             if (empty($items))
             {
