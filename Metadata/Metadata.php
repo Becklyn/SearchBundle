@@ -2,6 +2,7 @@
 
 namespace Becklyn\SearchBundle\Metadata;
 
+use Becklyn\SearchBundle\Metadata\SearchItem\SearchItemList;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 
@@ -95,54 +96,12 @@ class Metadata
 
 
     /**
-     * @return SearchItem[]
-     */
-    public function getAllItems () : array
-    {
-        return $this->items;
-    }
-
-
-
-    /**
-     * Returns all localized items
+     * Returns a list of all search items
      *
-     * @return SearchItem[]
+     * @return SearchItemList
      */
-    public function getAllLocalizedItems () : array
+    public function getAllItems () : SearchItemList
     {
-        return $this->filterItems(true);
-    }
-
-
-
-    /**
-     * Returns all unlocalized items
-     *
-     * @return SearchItem[]
-     */
-    public function getAllUnlocalizedItems () : array
-    {
-        return $this->filterItems(false);
-    }
-
-
-
-    /**
-     * Filters all items to only include (un)localized ones
-     *
-     * @param bool $localized
-     *
-     * @return SearchItem[]
-     */
-    private function filterItems (bool $localized)
-    {
-        return array_filter(
-            $this->getAllItems(),
-            function (SearchItem $item) use ($localized)
-            {
-                return $localized === $item->isLocalized();
-            }
-        );
+        return new SearchItemList($this->items);
     }
 }

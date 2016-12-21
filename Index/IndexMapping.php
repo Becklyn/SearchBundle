@@ -98,13 +98,14 @@ class IndexMapping
      */
     private function generateCreateRequests () : array
     {
+        $allItems = $this->metadata->getAllItems();
         $requests = [];
 
         foreach ($this->languageConfiguration->getAllLanguages() as $language)
         {
             $items = $language !== null
-                ? $this->metadata->getAllLocalizedItems()
-                : $this->metadata->getAllUnlocalizedItems();
+                ? $allItems->getAllLocalizedItems()
+                : $allItems->getAllUnlocalizedItems();
 
             if (empty($items))
             {
