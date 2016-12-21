@@ -13,20 +13,6 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 class PropertyAccessChecker
 {
     /**
-     * @var PropertyAccessor
-     */
-    private $propertyAccessor;
-
-
-
-    public function __construct ()
-    {
-        $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
-    }
-
-
-
-    /**
      * Returns whether the property is somehow accessible
      *
      * @param \ReflectionProperty $property
@@ -41,8 +27,36 @@ class PropertyAccessChecker
             return true;
         }
 
-        // try to find a getter for the property
-        $emptyObject = $property->getDeclaringClass()->newInstanceWithoutConstructor();
-        return $this->propertyAccessor->isReadable($emptyObject, $property->getName());
+        $class = $property->getDeclaringClass();
+        $camelCaseProperty = $this->camelize($property->getName());
+
+        $possibleAccessors = [
+            "get{$camelCaseProperty}",
+            "is{$camelCaseProperty}",
+            "has{$camelCaseProperty}",
+        ];
+
+        foreach ($possibleAccessors as $method)
+        {
+            if ($class->hasMethod($method) && $class->getMethod($method)->isPublic())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Transforms the string to camel case
+     *
+     * @param string $string
+     *
+     * @return string
+     */
+    private function camelize ($string) : string
+    {
+        return str_replace(' ', '', ucwords(str_replace('_', ' ', $string)));
     }
 }
