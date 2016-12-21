@@ -58,6 +58,7 @@ class ElasticsearchClient
      *
      * @param ElasticsearchRequest $request
      *
+     * @return array|null
      * @throws Missing404Exception
      */
     public function sendRequest (ElasticsearchRequest $request)
@@ -73,7 +74,7 @@ class ElasticsearchClient
                 $client = $client->{$namespace}();
             }
 
-            $client->{$action}($request->getData());
+            return $client->{$action}($request->getData());
         }
         catch (Missing404Exception $exception)
         {
@@ -81,6 +82,8 @@ class ElasticsearchClient
             {
                 throw $exception;
             }
+
+            return null;
         }
     }
 
@@ -90,13 +93,19 @@ class ElasticsearchClient
      * Sends all given requests to elastic search
      *
      * @param ElasticsearchRequest[] $requests
+     *
+     * @return array
      */
     public function sendRequests (array $requests)
     {
+        $results = [];
+
         foreach ($requests as $request)
         {
-            $this->sendRequest($request);
+            $results[] = $this->sendRequest($request);
         }
+
+        return $results;
     }
 
 
