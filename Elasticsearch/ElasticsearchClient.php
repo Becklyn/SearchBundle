@@ -147,25 +147,4 @@ class ElasticsearchClient
             }
         }
     }
-
-
-
-    /**
-     * Searches with the given parameters
-     *
-     * @param string[] $types
-     * @param array    $body
-     *
-     * @return array
-     */
-    public function search (array $types, array $body) : array
-    {
-        $results = $this->client->search([
-            "index" => $this->index,
-            "type" => $types,
-            "body" => $body,
-        ]);
-
-        return $results["hits"];
-    }
 }
