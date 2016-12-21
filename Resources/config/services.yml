@@ -1,5 +1,13 @@
 services:
 
+    becklyn.search.client:
+        class: Becklyn\SearchBundle\Search\SearchClient
+        arguments:
+            - '@becklyn.search.elasticsearch'
+            - '@becklyn.search.metadata'
+            - '@becklyn.search.entity_loader'
+            - '@becklyn.search.index.configuration.language'
+
     becklyn.search.indexer:
         class: Becklyn\SearchBundle\Search\SearchIndexer
         arguments:

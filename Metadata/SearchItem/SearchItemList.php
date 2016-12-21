@@ -23,6 +23,12 @@ class SearchItemList implements \IteratorAggregate
     private $fqcnMap = [];
 
 
+    /**
+     * @var SearchItem[]
+     */
+    private $typeMap = [];
+
+
 
     /**
      * @param SearchItem[] $searchItems
@@ -34,6 +40,7 @@ class SearchItemList implements \IteratorAggregate
         foreach ($searchItems as $searchItem)
         {
             $this->fqcnMap[$searchItem->getFqcn()] = $searchItem;
+            $this->typeMap[$searchItem->getElasticsearchType()] = $searchItem;
         }
     }
 
@@ -124,5 +131,19 @@ class SearchItemList implements \IteratorAggregate
         }
 
         return new SearchItemList($filtered);
+    }
+
+
+
+    /**
+     * Returns the item by type
+     *
+     * @param string $type
+     *
+     * @return SearchItem|null
+     */
+    public function getByType (string $type)
+    {
+        return $this->typeMap[$type] ?? null;
     }
 }
