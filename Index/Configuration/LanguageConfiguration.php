@@ -2,6 +2,8 @@
 
 namespace Becklyn\SearchBundle\Index\Configuration;
 
+use Becklyn\SearchBundle\Entity\LocalizedSearchableEntityInterface;
+use Becklyn\SearchBundle\Entity\SearchableEntityInterface;
 use Becklyn\SearchBundle\Exception\InvalidSearchConfigurationException;
 
 
@@ -112,5 +114,24 @@ class LanguageConfiguration
         array_unshift($languages, null);
 
         return $languages;
+    }
+
+
+
+    /**
+     * Returns the index for the given entity
+     *
+     * @param SearchableEntityInterface $entity
+     *
+     * @return string
+     */
+    public function getIndexForEntity (SearchableEntityInterface $entity) : string
+    {
+        if ($entity instanceof LocalizedSearchableEntityInterface)
+        {
+            return $this->getIndexName($entity->getLanguage()->getCode());
+        }
+
+        return $this->getIndexName(null);
     }
 }

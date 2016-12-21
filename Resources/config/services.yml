@@ -5,6 +5,7 @@ services:
         arguments:
             - '@becklyn.search.elasticsearch'
             - '@becklyn.search.metadata'
+            - '@becklyn.search.index.configuration.language'
 
     becklyn.search.command.index:
         class: Becklyn\SearchBundle\Command\IndexCommand
