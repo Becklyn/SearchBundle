@@ -14,6 +14,7 @@ services:
             - '@becklyn.search.elasticsearch'
             - '@becklyn.search.metadata'
             - '@becklyn.search.index.configuration.language'
+            - '@becklyn.search.accessor.entity_value'
 
     becklyn.search.command.index:
         class: Becklyn\SearchBundle\Command\IndexCommand
@@ -27,6 +28,17 @@ services:
             - '@doctrine'
         tags:
             - { name: console.command }
+
+
+    # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Accessor
+    # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    becklyn.search.accessor.entity_value:
+        class: Becklyn\SearchBundle\Accessor\EntityValueAccessor
+        arguments:
+            - '@service_container'
+            - [] # set via configuration
+        public: false
 
 
     # ------------------------------------------------------------------------------------------------------------------------
@@ -64,6 +76,12 @@ services:
             - '@service_container'
         public: false
 
+
+    # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Format Processor
+    # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    becklyn.search.format_processor.no_op:
+        class: Becklyn\SearchBundle\FormatProcessor\NoOpProcessor
 
     # ------------------------------------------------------------------------------------------------------------------------
     # Index

@@ -14,6 +14,7 @@
     "require": {
         "php": "^7.0",
         "becklyn/interfaces": "dev-master#1af87fdb5224c5c7c44590091d148767d6943a37",
+        "becklyn/search-text-transformer": "dev-master",
         "doctrine/common": "^2.6",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/orm": "^2.5",

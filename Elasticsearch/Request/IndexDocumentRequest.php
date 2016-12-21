@@ -2,12 +2,11 @@
 
 namespace Becklyn\SearchBundle\Elasticsearch\Request;
 
+use Becklyn\SearchBundle\Accessor\EntityValueAccessor;
 use Becklyn\SearchBundle\Elasticsearch\ElasticsearchClient;
 use Becklyn\SearchBundle\Elasticsearch\ElasticsearchRequest;
 use Becklyn\SearchBundle\Entity\SearchableEntityInterface;
 use Becklyn\SearchBundle\Metadata\SearchItem;
-use Symfony\Component\PropertyAccess\PropertyAccess;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 
 /**
@@ -15,12 +14,6 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
  */
 class IndexDocumentRequest extends ElasticsearchRequest
 {
-    /**
-     * @var PropertyAccessor
-     */
-    private $accessor;
-
-
     /**
      * @var SearchableEntityInterface
      */
@@ -33,19 +26,26 @@ class IndexDocumentRequest extends ElasticsearchRequest
     private $item;
 
 
+    /**
+     * @var EntityValueAccessor
+     */
+    private $valueAccessor;
+
+
 
     /**
      * @param string                    $index
      * @param SearchableEntityInterface $entity
      * @param SearchItem                $item
+     * @param EntityValueAccessor       $valueAccessor
      */
-    public function __construct ($index, SearchableEntityInterface $entity, SearchItem $item)
+    public function __construct ($index, SearchableEntityInterface $entity, SearchItem $item, EntityValueAccessor $valueAccessor)
     {
         parent::__construct($index, "index");
 
-        $this->accessor = PropertyAccess::createPropertyAccessor();
         $this->entity = $entity;
         $this->item = $item;
+        $this->valueAccessor = $valueAccessor;
     }
 
 
@@ -87,7 +87,7 @@ class IndexDocumentRequest extends ElasticsearchRequest
 
         foreach ($this->item->getFields() as $field)
         {
-            $data[$field->getElasticsearchFieldName()] = $this->accessor->getValue($this->entity, $field->getName());
+            $data[$field->getElasticsearchFieldName()] = $this->valueAccessor->getValue($this->entity, $field);
         }
 
         return $data;

@@ -125,6 +125,7 @@ class ClassMetadataExtractor
                 $property->getName(),
                 SearchItemField::ACCESSOR_TYPE_PROPERTY,
                 $propertyAnnotation->weight,
+                $propertyAnnotation->format,
                 $propertyAnnotation->numberOfFragmentation
             );
 
@@ -162,6 +163,7 @@ class ClassMetadataExtractor
                 $method->getName(),
                 SearchItemField::ACCESSOR_TYPE_METHOD,
                 $propertyAnnotation->weight,
+                $propertyAnnotation->format,
                 $propertyAnnotation->numberOfFragmentation
             );
 

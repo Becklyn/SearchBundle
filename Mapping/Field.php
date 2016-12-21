@@ -21,4 +21,10 @@ class Field
      * @var int|null
      */
     public $numberOfFragmentation = null;
+
+
+    /**
+     * @var string
+     */
+    public $format = "html";
 }

@@ -2,6 +2,7 @@
 
 namespace Becklyn\SearchBundle\Search;
 
+use Becklyn\SearchBundle\Accessor\EntityValueAccessor;
 use Becklyn\SearchBundle\Elasticsearch\ElasticsearchClient;
 use Becklyn\SearchBundle\Elasticsearch\Request\IndexDocumentRequest;
 use Becklyn\SearchBundle\Entity\SearchableEntityInterface;
@@ -40,18 +41,26 @@ class SearchIndexer
     private $languageConfiguration;
 
 
+    /**
+     * @var EntityValueAccessor
+     */
+    private $valueAccessor;
+
+
 
     /**
      * @param ElasticsearchClient   $client
      * @param Metadata              $metadata
      * @param LanguageConfiguration $languageConfiguration
+     * @param EntityValueAccessor   $valueAccessor
      */
-    public function __construct (ElasticsearchClient $client, Metadata $metadata, LanguageConfiguration $languageConfiguration)
+    public function __construct (ElasticsearchClient $client, Metadata $metadata, LanguageConfiguration $languageConfiguration, EntityValueAccessor $valueAccessor)
     {
         $this->client = $client;
         $this->metadata = $metadata;
         $this->accessor = PropertyAccess::createPropertyAccessor();
         $this->languageConfiguration = $languageConfiguration;
+        $this->valueAccessor = $valueAccessor;
     }
 
 
@@ -117,6 +126,6 @@ class SearchIndexer
         }
 
         $index = $this->languageConfiguration->getIndexForEntity($entity);
-        return new IndexDocumentRequest($index, $entity, $item);
+        return new IndexDocumentRequest($index, $entity, $item, $this->valueAccessor);
     }
 }

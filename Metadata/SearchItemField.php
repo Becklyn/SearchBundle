@@ -34,17 +34,24 @@ class SearchItemField
     /**
      * @var string
      */
+    private $format;
+
+
+    /**
+     * @var string
+     */
     private $accessorType;
 
 
 
     /**
      * @param string   $name
-     * @param int      $weight
      * @param string   $accessorType
+     * @param int      $weight
+     * @param string   $format
      * @param int|null $numberOfFragments
      */
-    public function __construct (string $name, string $accessorType, int $weight, int $numberOfFragments = null)
+    public function __construct (string $name, string $accessorType, int $weight, string $format, int $numberOfFragments = null)
     {
         if (!in_array($accessorType, [self::ACCESSOR_TYPE_METHOD, self::ACCESSOR_TYPE_PROPERTY], true))
         {
@@ -57,6 +64,7 @@ class SearchItemField
         $this->name = $name;
         $this->accessorType = $accessorType;
         $this->weight = $weight;
+        $this->format = $format;
         $this->numberOfFragments = $numberOfFragments ?? self::FRAGMENTATION_DEFAULT;
     }
 
@@ -88,6 +96,16 @@ class SearchItemField
     public function getWeight () : int
     {
         return $this->weight;
+    }
+
+
+
+    /**
+     * @return string
+     */
+    public function getFormat () : string
+    {
+        return $this->format;
     }
 
 

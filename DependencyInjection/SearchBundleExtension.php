@@ -7,6 +7,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
 
 
 class SearchBundleExtension extends Extension
@@ -38,6 +39,10 @@ class SearchBundleExtension extends Extension
             ->replaceArgument(0, $config["index"])
             ->replaceArgument(1, $config["localized"])
             ->replaceArgument(2, $config["unlocalized"] ?? []);
+
+        // set config for entity value accessor
+        $container->getDefinition("becklyn.search.accessor.entity_value")
+            ->replaceArgument(1, $config["format_processors"]);
     }
 
 
