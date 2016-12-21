@@ -2,12 +2,23 @@
 
 namespace Becklyn\SearchBundle\LanguageIntegration;
 
+use Becklyn\SearchBundle\Exception\InvalidSearchConfigurationException;
+use Becklyn\SearchBundle\LanguageIntegration\AnnotatedField\AnnotatedMethod;
+use Becklyn\SearchBundle\LanguageIntegration\AnnotatedField\AnnotatedProperty;
+use Becklyn\SearchBundle\Mapping\Field;
+use Doctrine\Common\Annotations\AnnotationReader;
+
 
 /**
  * Language integration, that extracts accessible properties / public methods from a given class.
  */
 class AccessiblePropertyCollector
 {
+    /**
+     * @var AnnotationReader
+     */
+    private $reader;
+
     /**
      * @var PropertyAccessChecker
      */
@@ -17,8 +28,10 @@ class AccessiblePropertyCollector
 
     public function __construct ()
     {
+        $this->reader = new AnnotationReader();
         $this->propertyAccessChecker = new PropertyAccessChecker();
     }
+
 
 
     /**
@@ -26,7 +39,8 @@ class AccessiblePropertyCollector
      *
      * @param \ReflectionClass $class
      *
-     * @return \ReflectionProperty[]
+     * @return AnnotatedProperty[]
+     * @throws InvalidSearchConfigurationException
      */
     public function getProperties (\ReflectionClass $class) : array
     {
@@ -35,16 +49,34 @@ class AccessiblePropertyCollector
             return $class->getProperties();
         };
 
-        $candidates = $this->fetchCandidates($class, $items, []);
+        $properties = $this->fetchCandidates($class, $items, []);
+        $filtered = [];
 
-        return array_filter(
-            $candidates,
-            function (\ReflectionProperty $property)
+        foreach ($properties as $property)
+        {
+            /** @var Field $annotation */
+            $annotation = $this->reader->getPropertyAnnotation($property, Field::class);
+
+            if (null === $annotation)
             {
-                return $this->propertyAccessChecker->isAccessible($property);
+                continue;
             }
-        );
+
+            if (!$this->propertyAccessChecker->isAccessible($property))
+            {
+                throw new InvalidSearchConfigurationException(sprintf(
+                    "Annotation found on property %s::$%s, but no way to access the property either directly or via is*(), has*() or get*() accessors.",
+                    $class->getName(),
+                    $property->getName()
+                ));
+            }
+
+            $filtered[] = new AnnotatedProperty($property, $annotation);
+        }
+
+        return $filtered;
     }
+
 
 
     /**
@@ -52,7 +84,8 @@ class AccessiblePropertyCollector
      *
      * @param \ReflectionClass $class
      *
-     * @return \ReflectionMethod[]
+     * @return AnnotatedMethod[]
+     * @throws InvalidSearchConfigurationException
      */
     public function getMethods (\ReflectionClass $class) : array
     {
@@ -61,15 +94,32 @@ class AccessiblePropertyCollector
             return $class->getMethods(\ReflectionMethod::IS_PUBLIC);
         };
 
-        $candidates = $this->fetchCandidates($class, $items, []);
+        $methods = $this->fetchCandidates($class, $items, []);
+        $filtered = [];
 
-        return array_filter(
-            $candidates,
-            function (\ReflectionMethod $method)
+        foreach ($methods as $method)
+        {
+            /** @var Field $annotation */
+            $annotation = $this->reader->getMethodAnnotation($method, Field::class);
+
+            if (null === $annotation)
             {
-                return 0 === $method->getNumberOfRequiredParameters();
+                continue;
             }
-        );
+
+            if (0 !== $method->getNumberOfRequiredParameters())
+            {
+                throw new InvalidSearchConfigurationException(sprintf(
+                    "Can't use method %s::$%s for search indexing, as the method has required parameters.",
+                    $class->getName(),
+                    $method->getName()
+                ));
+            }
+
+            $filtered[] = new AnnotatedMethod($method, $annotation);
+        }
+
+        return $filtered;
     }
 
 

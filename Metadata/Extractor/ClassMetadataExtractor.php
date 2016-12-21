@@ -110,23 +110,17 @@ class ClassMetadataExtractor
     {
         $properties = [];
 
-        foreach ($this->propertyCollector->getProperties($class) as $property)
+        foreach ($this->propertyCollector->getProperties($class) as $annotatedProperty)
         {
-            /** @var Field $propertyAnnotation */
-            $propertyAnnotation = $this->reader->getPropertyAnnotation($property, Field::class);
-
-            // The property isn't meant to be indexed for searching
-            if (null === $propertyAnnotation)
-            {
-                continue;
-            }
+            $property = $annotatedProperty->getProperty();
+            $annotation = $annotatedProperty->getAnnotation();
 
             $propertyMetadata = new SearchItemField(
                 $property->getName(),
                 SearchItemField::ACCESSOR_TYPE_PROPERTY,
-                $propertyAnnotation->weight,
-                $propertyAnnotation->format,
-                $propertyAnnotation->numberOfFragmentation
+                $annotation->weight,
+                $annotation->format,
+                $annotation->numberOfFragmentation
             );
 
             $properties[] = $propertyMetadata;
@@ -148,23 +142,17 @@ class ClassMetadataExtractor
     {
         $methods = [];
 
-        foreach ($this->propertyCollector->getMethods($class) as $method)
+        foreach ($this->propertyCollector->getMethods($class) as $annotatedMethod)
         {
-            /** @var Field $propertyAnnotation */
-            $propertyAnnotation = $this->reader->getMethodAnnotation($method, Field::class);
-
-            // The method isn't meant to be indexed for searching
-            if (null === $propertyAnnotation)
-            {
-                continue;
-            }
+            $method = $annotatedMethod->getMethod();
+            $annotation = $annotatedMethod->getAnnotation();
 
             $propertyMetadata = new SearchItemField(
                 $method->getName(),
                 SearchItemField::ACCESSOR_TYPE_METHOD,
-                $propertyAnnotation->weight,
-                $propertyAnnotation->format,
-                $propertyAnnotation->numberOfFragmentation
+                $annotation->weight,
+                $annotation->format,
+                $annotation->numberOfFragmentation
             );
 
             $methods[] = $propertyMetadata;
