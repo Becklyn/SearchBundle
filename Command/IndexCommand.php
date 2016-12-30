@@ -228,7 +228,7 @@ class IndexCommand extends Command
             }
             else
             {
-                $this->indexer->bulkIndex($entities);
+                $this->indexer->bulkIndex($entities->getAllResults());
 
                 $io->writeln(sprintf(
                     "  <fg=green>%d %s indexed</>",

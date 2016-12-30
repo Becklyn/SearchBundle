@@ -48,38 +48,15 @@ class EntityLoader
      * @param SearchItem $item
      * @param int[]|null $ids if provided, only entities with one of these ids need to be loaded
      *
-     * @return SearchableEntityInterface[]
+     * @return EntityLoaderResult
      */
-    public function loadEntities (SearchItem $item, array $ids = null) : array
+    public function loadEntities (SearchItem $item, array $ids = null) : EntityLoaderResult
     {
         $loader = $item->getLoader();
 
-        $entities = null !== $loader
+        return null !== $loader
             ? $this->loadUsingLoader($item, $ids)
             : $this->loadWithDefaultLoader($item, $ids);
-
-        return $this->indexById($entities);
-    }
-
-
-
-    /**
-     * Indexes the given list of entities by id
-     *
-     * @param SearchableEntityInterface[] $entities
-     *
-     * @return SearchableEntityInterface[]
-     */
-    private function indexById (array $entities)
-    {
-        $indexed = [];
-
-        foreach ($entities as $entity)
-        {
-            $indexed[$entity->getId()] = $entity;
-        }
-
-        return $indexed;
     }
 
 
@@ -87,15 +64,15 @@ class EntityLoader
     /**
      * Loads the given entities with a custom loader
      *
-     * @param string     $loader
+     * @param SearchItem $item
      * @param int[]|null $ids
      *
-     * @return SearchableEntityInterface[]
+     * @return EntityLoaderResult
      * @throws InvalidEntityLoaderException
      */
-    private function loadUsingLoader (string $loader, array $ids = null)
+    private function loadUsingLoader (SearchItem $item, array $ids = null) : EntityLoaderResult
     {
-        $serviceCall = explode(":", $loader);
+        $serviceCall = explode(":", $item->getLoader());
 
         if (2 !== count($serviceCall))
         {
@@ -104,7 +81,7 @@ class EntityLoader
 
         $service = $this->container->get($serviceCall[0]);
         $method = $serviceCall[1];
-        return $service->$method($ids);
+        return $service->$method($item, $ids);
     }
 
 
@@ -113,14 +90,16 @@ class EntityLoader
      * @param SearchItem $item
      * @param int[]|null $ids
      *
-     * @return SearchableEntityInterface[]
+     * @return EntityLoaderResult
      */
-    private function loadWithDefaultLoader (SearchItem $item, array $ids = null) : array
+    private function loadWithDefaultLoader (SearchItem $item, array $ids = null) : EntityLoaderResult
     {
         $repository = $this->doctrine->getRepository($item->getFqcn());
 
-        return null !== $ids
+        $result = null !== $ids
             ? $repository->findBy(["id" => $ids])
             : $repository->findAll();
+
+        return new EntityLoaderResult($result);
     }
 }

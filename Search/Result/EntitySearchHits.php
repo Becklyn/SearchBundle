@@ -28,23 +28,24 @@ class EntitySearchHits implements \IteratorAggregate, \Countable
     private $maxScore = null;
 
 
-    /**
-     * @var LanguageInterface|null
-     */
-    private $language;
-
-
 
     /**
-     * @param string                 $entityClass
-     * @param SearchHit[]            $hits
-     * @param LanguageInterface|null $language
+     * @param string      $entityClass
+     * @param SearchHit[] $hits
      */
-    public function __construct (string $entityClass, array $hits, LanguageInterface $language = null)
+    public function __construct (string $entityClass, array $hits)
     {
         $this->entityClass = $entityClass;
         $this->hits = $hits;
-        $this->language = $language;
+
+        // sort hits by score
+        usort(
+            $this->hits,
+            function (SearchHit $left, SearchHit $right)
+            {
+                return $right->getScore() - $left->getScore();
+            }
+        );
     }
 
 
@@ -77,16 +78,6 @@ class EntitySearchHits implements \IteratorAggregate, \Countable
     public function getHits () : array
     {
         return $this->hits;
-    }
-
-
-
-    /**
-     * @return LanguageInterface
-     */
-    public function getLanguage () : LanguageInterface
-    {
-        return $this->language;
     }
 
 

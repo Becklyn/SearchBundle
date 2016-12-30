@@ -70,4 +70,36 @@ class SearchHit
     {
         return array_merge(...array_values($this->highlights));
     }
+
+
+
+    /**
+     * Merges the hit with another hit
+     *
+     * @param SearchHit $hit
+     */
+    public function mergeHit (SearchHit $hit)
+    {
+        if ($hit->getEntity() !== $this->getEntity())
+        {
+            throw new \InvalidArgumentException("Can't merge with a hit of another entity.");
+        }
+
+        // merge highlights
+        foreach ($hit->highlights as $field => $highlights)
+        {
+            if (!isset($this->highlights[$field]))
+            {
+                $this->highlights[$field] = $highlights;
+                continue;
+            }
+
+            foreach ($highlights as $highlight)
+            {
+                $this->highlights[$field][] = $highlight;
+            }
+        }
+
+        $this->score += $hit->score / 2;
+    }
 }

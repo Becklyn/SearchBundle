@@ -15,6 +15,7 @@ use Becklyn\SearchBundle\Metadata\SearchItem\SearchItemList;
 use Becklyn\SearchBundle\Search\Result\SearchHit;
 use Becklyn\SearchBundle\Search\Result\EntitySearchHits;
 use Becklyn\SearchBundle\Search\Result\SearchResult;
+use Becklyn\SearchBundle\Search\Result\SearchResultBuilder;
 
 
 /**
@@ -113,19 +114,14 @@ class SearchClient
      */
     private function buildSearchResult (array $responses, LanguageInterface $language = null) : SearchResult
     {
-        $entityHits = [];
+        $builder = new SearchResultBuilder();
 
         foreach ($this->groupByType($responses) as $type => $hits)
         {
-            $resultList = $this->buildEntitySearchHits($type, $hits, $language);
-
-            if (null !== $resultList)
-            {
-                $entityHits[] = $resultList;
-            }
+            $this->addHitsForTypeToSearchResult($builder, $type, $hits);
         }
 
-        return new SearchResult($entityHits);
+        return $builder->getSearchResult();
     }
 
 
@@ -133,20 +129,17 @@ class SearchClient
     /**
      * Generates a search result list from the list of raw results
      *
-     * @param string            $type
-     * @param array             $hits
-     * @param LanguageInterface $language
-     *
-     * @return EntitySearchHits|null
+     * @param SearchResultBuilder $searchResultBuilder
+     * @param string              $type
+     * @param array               $hits
      */
-    private function buildEntitySearchHits (string $type, array $hits, LanguageInterface $language = null)
+    private function addHitsForTypeToSearchResult (SearchResultBuilder $searchResultBuilder, string $type, array $hits)
     {
         $item = $this->allItems->getByType($type);
-        $results = [];
 
         if (null === $item)
         {
-            return null;
+            return;
         }
 
         $ids = array_map(
@@ -157,25 +150,17 @@ class SearchClient
             $hits
         );
 
-        $entities = $this->entityLoader->loadEntities($item, $ids);
+        $loadedEntities = $this->entityLoader->loadEntities($item, $ids);
 
         foreach ($hits as $hit)
         {
-            $entity = $entities[$hit["_source"][ElasticsearchClient::ENTITY_ID_FIELD]] ?? null;
+            $entity = $loadedEntities->getEntityForId($hit["_source"][ElasticsearchClient::ENTITY_ID_FIELD]);
 
             if (null !== $entity)
             {
-                $results[] = new SearchHit($entity, $hit["_score"], $hit["highlight"] ?? []);
+                $searchResultBuilder->addHit(new SearchHit($entity, $hit["_score"], $hit["highlight"] ?? []));
             }
         }
-
-        return !empty($results)
-            ? new EntitySearchHits(
-                $item->getFqcn(),
-                $results,
-                $item->isLocalized() ? $language : null
-            )
-            : null;
     }
 
 
