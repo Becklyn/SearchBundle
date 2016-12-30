@@ -12,13 +12,13 @@ namespace Becklyn\SearchBundle\Mapping;
 class Item
 {
     /**
-     * @var string|null
+     * @var string
      */
     public $index = null;
 
 
     /**
-     * @var string|null
+     * @var string
      */
     public $loader = null;
 }
