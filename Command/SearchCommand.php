@@ -23,7 +23,7 @@ class SearchCommand extends ContainerAwareCommand
      */
     public function __construct ()
     {
-        parent::__construct("becklyn:search:search");
+        parent::__construct("becklyn:search:client");
     }
 
 
@@ -116,6 +116,11 @@ class SearchCommand extends ContainerAwareCommand
                     $entityResults->getHits()
                 )
             );
+        }
+
+        if (0 === count($result))
+        {
+            $io->block("No hits found for query „{$query}“.");
         }
     }
 }
