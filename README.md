@@ -237,3 +237,5 @@ If the loader is called with `null`, all entities should be returned.
 If the loader is called with `int[]`, only the entities with an id in the `int` array have to be loaded.
 
 It is not required to load entities for *all* provided ids, as the missing search results will just be removed from the result list.
+
+The loader **must** return an `EntityLoaderResult`.
