@@ -120,7 +120,7 @@ class ClassMetadataExtractor
                 SearchItemField::ACCESSOR_TYPE_PROPERTY,
                 $annotation->weight,
                 $annotation->format,
-                $annotation->numberOfFragmentation
+                $annotation->fragments
             );
 
             $properties[] = $propertyMetadata;
@@ -152,7 +152,7 @@ class ClassMetadataExtractor
                 SearchItemField::ACCESSOR_TYPE_METHOD,
                 $annotation->weight,
                 $annotation->format,
-                $annotation->numberOfFragmentation
+                $annotation->fragments
             );
 
             $methods[] = $propertyMetadata;

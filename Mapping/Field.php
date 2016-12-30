@@ -20,11 +20,11 @@ class Field
     /**
      * @var int|null
      */
-    public $numberOfFragmentation = null;
+    public $fragments = null;
 
 
     /**
      * @var string
      */
-    public $format = "html";
+    public $format = "plain";
 }
