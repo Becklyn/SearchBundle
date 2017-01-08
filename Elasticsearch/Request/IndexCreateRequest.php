@@ -62,17 +62,16 @@ class IndexCreateRequest extends ElasticsearchRequest
      */
     public function getData () : array
     {
-        $analyzerName = $this->languageConfiguration->getAnalyzer($this->language);
-        $searchAnalyzerName = $this->languageConfiguration->getSearchAnalyzer($this->language);
-        $analyzer = $this->analysisConfiguration->getAnalyzer($analyzerName);
+        $indexAnalyzer = $this->languageConfiguration->getIndexAnalyzer($this->language);
+        $searchAnalyzer = $this->languageConfiguration->getSearchAnalyzer($this->language);
 
-        $analyzerList = [
-            $analyzerName => $analyzer,
+        $usedAnalyzers = [
+            $indexAnalyzer => $this->analysisConfiguration->getAnalyzer($indexAnalyzer),
         ];
 
-        if ($searchAnalyzerName !== $analyzerName)
+        if ($searchAnalyzer !== $indexAnalyzer)
         {
-            $analyzerList[$searchAnalyzerName] = $this->analysisConfiguration->getAnalyzer($searchAnalyzerName);
+            $usedAnalyzers[$searchAnalyzer] = $this->analysisConfiguration->getAnalyzer($searchAnalyzer);
         }
 
         return array_replace(parent::getData(), [
@@ -83,11 +82,11 @@ class IndexCreateRequest extends ElasticsearchRequest
                         "number_of_replicas" => 1,
                     ],
                     "analysis" => [
-                        "analyzer" => $analyzerList,
-                        "filter" => $this->findCustomFilters($analyzerList),
+                        "analyzer" => $usedAnalyzers,
+                        "filter" => $this->findCustomFilters($usedAnalyzers),
                     ],
                 ],
-                "mappings" => $this->buildMappings($analyzerName, $searchAnalyzerName),
+                "mappings" => $this->buildMappings($indexAnalyzer, $searchAnalyzer),
             ]
         ]);
     }
@@ -97,11 +96,11 @@ class IndexCreateRequest extends ElasticsearchRequest
     /**
      * Finds all custom filters
      *
-     * @param array $analyzer
+     * @param array $analyzerList
      *
      * @return array
      */
-    private function findCustomFilters (array $analyzerList)
+    private function findCustomFilters (array $analyzerList) : array
     {
         $customFilters = [];
 
@@ -132,18 +131,18 @@ class IndexCreateRequest extends ElasticsearchRequest
     /**
      * Builds the complete mapping for this index
      *
-     * @param string $analyzerName
-     * @param string $searchAnalyzerName
+     * @param string $indexAnalyzer
+     * @param string $searchAnalyzer
      *
      * @return array
      */
-    private function buildMappings (string $analyzerName, string $searchAnalyzerName)
+    private function buildMappings (string $indexAnalyzer, string $searchAnalyzer)
     {
         $mapping = [];
 
         foreach ($this->searchItems as $item)
         {
-            $mapping[$item->getElasticsearchType()] = $this->buildMappingForItem($item, $analyzerName, $searchAnalyzerName);
+            $mapping[$item->getElasticsearchType()] = $this->buildMappingForItem($item, $indexAnalyzer, $searchAnalyzer);
         }
 
         return $mapping;
@@ -155,12 +154,12 @@ class IndexCreateRequest extends ElasticsearchRequest
      * Builds the mapping for the given item
      *
      * @param SearchItem $item
-     * @param string     $analyzerName
-     * @param string     $searchAnalyzerName
+     * @param string     $indexAnalyzer
+     * @param string     $searchAnalyzer
      *
      * @return array
      */
-    private function buildMappingForItem (SearchItem $item, string $analyzerName, string $searchAnalyzerName)
+    private function buildMappingForItem (SearchItem $item, string $indexAnalyzer, string $searchAnalyzer)
     {
         $mapping = [
             "_source" => [
@@ -181,8 +180,8 @@ class IndexCreateRequest extends ElasticsearchRequest
         {
             $mapping["properties"][$field->getElasticsearchFieldName()] = [
                 "type" => "text",
-                "analyzer" => $analyzerName,
-                "search_analyzer" => $searchAnalyzerName,
+                "analyzer" => $indexAnalyzer,
+                "search_analyzer" => $searchAnalyzer,
                 "term_vector" => "with_positions_offsets",
             ];
         }

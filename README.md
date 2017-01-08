@@ -153,11 +153,12 @@ becklyn_search:
             type: stemmer
             name: english
     unlocalized:
-        analyzer: analyzer_default # both index and search analyzer
+        analyzer: analyzer_default # a string value means that both index and search use the same analyzer
     localized:
         de:
-            index_analyzer: analyzer_en
-            search_analyzer: analyzer_en
+            analyzer: 
+                index: analyzer_en
+                search: analyzer_en
 ```
 
 | Key                  | Description      |
@@ -167,8 +168,8 @@ becklyn_search:
 | `format_processors`  | Processors for different text formats. If a field with a given processor is indexed, the processor is called and `html_post_process`ed, if it is selected. This will clean up the HTML (a better version of `strip_tags`), so that the processor can transform the format to HTML (and have it transformed to plain text afterwards). Default for `html_post_process` is `false`. |
 | `analyzers`          | A list of custom analyzers. The syntax mirrors the Elasticsearch API. |
 | `filters`            | A list of custom filters. The syntax mirrors the Elasticsearch API. |
-| `unlocalized`        | The definition for all unlocalized entities. Currently only the selection of a custom analyzer is possible. |
-| `localized`          | The configuration for localized entities in every language. Currently only the selection of a custom index analyzer and search analyzer is possible. |
+| `unlocalized`        | The definition for all unlocalized entities. Currently only the selection of custom analyzers is possible. |
+| `localized`          | The configuration for localized entities in every language. Currently only the selection of custom analyzers is possible. |
 
 
 Usage

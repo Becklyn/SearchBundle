@@ -80,9 +80,9 @@ class LanguageConfiguration
      * @return string
      * @throws InvalidSearchConfigurationException
      */
-    public function getAnalyzer (string $language = null) : string
+    public function getIndexAnalyzer (string $language = null) : string
     {
-        return $this->fetchConfigurationValue($language, "analyzer");
+        return $this->fetchLanguageConfiguration($language)["analyzer"]["index"];
     }
 
 
@@ -97,7 +97,7 @@ class LanguageConfiguration
      */
     public function getSearchAnalyzer (string $language = null) : string
     {
-        return $this->fetchConfigurationValue($language, "search_analyzer");
+        return $this->fetchLanguageConfiguration($language)["analyzer"]["search"];
     }
 
 
@@ -106,12 +106,11 @@ class LanguageConfiguration
      * Fetches a configuration value
      *
      * @param string|null $language
-     * @param string      $key
      *
-     * @return string
+     * @return array
      * @throws InvalidSearchConfigurationException
      */
-    private function fetchConfigurationValue (string $language = null, string $key) : string
+    private function fetchLanguageConfiguration (string $language = null) : array
     {
         if (null === $language)
         {
@@ -130,7 +129,7 @@ class LanguageConfiguration
             $data = $this->languageData[$language];
         }
 
-        return $data[$key];
+        return $data;
     }
 
 

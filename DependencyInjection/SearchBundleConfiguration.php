@@ -4,6 +4,7 @@ namespace Becklyn\SearchBundle\DependencyInjection;
 
 use Becklyn\SearchBundle\Index\Configuration\LanguageConfiguration;
 use Becklyn\SearchBundle\SearchBundle;
+use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -80,39 +81,59 @@ class SearchBundleConfiguration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-                ->arrayNode("localized")
-                    ->prototype("array")
-                        ->children()
-                            ->scalarNode("analyzer")->end()
-                            ->scalarNode("index_analyzer")->end()
-                            ->scalarNode("search_analyzer")->end()
-                        ->end()
-                    ->end()
-                ->end()
-                ->arrayNode("unlocalized")
-                    ->children()
-                        ->scalarNode("analyzer")->end()
-                        ->scalarNode("index_analyzer")->end()
-                        ->scalarNode("search_analyzer")->end()
-                    ->end()
-                    ->validate()
-                    ->ifTrue(
-                        function (array $node)
-                        {
-                            // index and search analyzer must either both be defined or none of them.
-                            if (isset($node["index_analyzer"]) !== isset($node["search_analyzer"]))
-                            {
-                                return true;
-                            }
-
-                            // analyzer AND index/search analyzer shouldn't both be defined.
-                            return isset($node["analyzer"]) === isset($node["index_analyzer"]);
-                        }
-                    )
-                    ->thenInvalid("You must either define 'analyzer' or both 'index_analyzer' and 'search_analyzer'.")
-                ->end()
+                ->append($this->appendLanguageConfigurationNode(true))
+                ->append($this->appendLanguageConfigurationNode(false))
             ->end();
 
         return $treeBuilder;
+    }
+
+
+
+    /**
+     * Appends the language configuration node
+     *
+     * @param bool $localized
+     *
+     * @return NodeDefinition
+     */
+    private function appendLanguageConfigurationNode (bool $localized)
+    {
+        $builder = new TreeBuilder();
+
+        if ($localized)
+        {
+            $node = $builder->root("localized");
+            $inner = $node->prototype("array");
+        }
+        else
+        {
+            $inner = $node = $builder->root("unlocalized");
+        }
+
+        $inner
+            ->children()
+                ->arrayNode("analyzer")
+                    ->beforeNormalization()
+                        ->ifString()
+                        ->then(
+                            function ($analyzer)
+                            {
+                                return [
+                                    "index" => $analyzer,
+                                    "search" => $analyzer,
+                                ];
+                            }
+                        )
+                    ->end()
+                    ->children()
+                        ->scalarNode("index")->end()
+                        ->scalarNode("search")->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+
+        return $node;
     }
 }
