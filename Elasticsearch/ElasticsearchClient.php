@@ -147,4 +147,16 @@ class ElasticsearchClient
             }
         }
     }
+
+
+
+    /**
+     * @internal
+     *
+     * @return Client
+     */
+    public function getClient () : Client
+    {
+        return $this->client;
+    }
 }

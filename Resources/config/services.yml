@@ -16,6 +16,22 @@ services:
             - '@becklyn.search.index.configuration.language'
             - '@becklyn.search.accessor.entity_value'
 
+
+    # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Accessor
+    # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    becklyn.search.accessor.entity_value:
+        class: Becklyn\SearchBundle\Accessor\EntityValueAccessor
+        arguments:
+            - '@service_container'
+            - [] # set via configuration
+        public: false
+
+
+    # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    # Commands
+    # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
     becklyn.search.command.index:
         class: Becklyn\SearchBundle\Command\IndexCommand
         arguments:
@@ -29,16 +45,12 @@ services:
         tags:
             - { name: console.command }
 
-
-    # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    # Accessor
-    # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    becklyn.search.accessor.entity_value:
-        class: Becklyn\SearchBundle\Accessor\EntityValueAccessor
+    becklyn.search.command.debug:
+        class: Becklyn\SearchBundle\Command\DebugCommand
         arguments:
-            - '@service_container'
-            - [] # set via configuration
-        public: false
+            - '@becklyn.search.elasticsearch'
+        tags:
+            - { name: console.command }
 
 
     # ------------------------------------------------------------------------------------------------------------------------
