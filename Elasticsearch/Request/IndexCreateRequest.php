@@ -63,7 +63,17 @@ class IndexCreateRequest extends ElasticsearchRequest
     public function getData () : array
     {
         $analyzerName = $this->languageConfiguration->getAnalyzer($this->language);
+        $searchAnalyzerName = $this->languageConfiguration->getSearchAnalyzer($this->language);
         $analyzer = $this->analysisConfiguration->getAnalyzer($analyzerName);
+
+        $analyzerList = [
+            $analyzerName => $analyzer,
+        ];
+
+        if ($searchAnalyzerName !== $analyzerName)
+        {
+            $analyzerList[$searchAnalyzerName] = $this->analysisConfiguration->getAnalyzer($searchAnalyzerName);
+        }
 
         return array_replace(parent::getData(), [
             "body" => [
@@ -73,13 +83,11 @@ class IndexCreateRequest extends ElasticsearchRequest
                         "number_of_replicas" => 1,
                     ],
                     "analysis" => [
-                        "analyzer" => [
-                            $analyzerName => $analyzer,
-                        ],
-                        "filter" => $this->findCustomFilters($analyzer),
+                        "analyzer" => $analyzerList,
+                        "filter" => $this->findCustomFilters($analyzerList),
                     ],
                 ],
-                "mappings" => $this->buildMappings($analyzerName),
+                "mappings" => $this->buildMappings($analyzerName, $searchAnalyzerName),
             ]
         ]);
     }
@@ -93,23 +101,26 @@ class IndexCreateRequest extends ElasticsearchRequest
      *
      * @return array
      */
-    private function findCustomFilters (array $analyzer)
+    private function findCustomFilters (array $analyzerList)
     {
         $customFilters = [];
 
-        if (!isset($analyzer["filter"]) || empty($analyzer["filter"]))
+        foreach ($analyzerList as $analyzer)
         {
-            return [];
-        }
-
-        foreach ($analyzer["filter"] as $filter)
-        {
-            $filterConfiguration = $this->analysisConfiguration->getFilter($filter);
-
-            // all filters that aren't explicitly defined are assumed to be built-in
-            if (null !== $filterConfiguration)
+            if (!isset($analyzer["filter"]) || empty($analyzer["filter"]))
             {
-                $customFilters[$filter] = $filterConfiguration;
+                return [];
+            }
+
+            foreach ($analyzer["filter"] as $filter)
+            {
+                $filterConfiguration = $this->analysisConfiguration->getFilter($filter);
+
+                // all filters that aren't explicitly defined are assumed to be built-in
+                if (null !== $filterConfiguration)
+                {
+                    $customFilters[$filter] = $filterConfiguration;
+                }
             }
         }
 
@@ -122,16 +133,17 @@ class IndexCreateRequest extends ElasticsearchRequest
      * Builds the complete mapping for this index
      *
      * @param string $analyzerName
+     * @param string $searchAnalyzerName
      *
      * @return array
      */
-    private function buildMappings (string $analyzerName)
+    private function buildMappings (string $analyzerName, string $searchAnalyzerName)
     {
         $mapping = [];
 
         foreach ($this->searchItems as $item)
         {
-            $mapping[$item->getElasticsearchType()] = $this->buildMappingForItem($item, $analyzerName);
+            $mapping[$item->getElasticsearchType()] = $this->buildMappingForItem($item, $analyzerName, $searchAnalyzerName);
         }
 
         return $mapping;
@@ -144,10 +156,11 @@ class IndexCreateRequest extends ElasticsearchRequest
      *
      * @param SearchItem $item
      * @param string     $analyzerName
+     * @param string     $searchAnalyzerName
      *
      * @return array
      */
-    private function buildMappingForItem (SearchItem $item, string $analyzerName)
+    private function buildMappingForItem (SearchItem $item, string $analyzerName, string $searchAnalyzerName)
     {
         $mapping = [
             "_source" => [
@@ -169,6 +182,7 @@ class IndexCreateRequest extends ElasticsearchRequest
             $mapping["properties"][$field->getElasticsearchFieldName()] = [
                 "type" => "text",
                 "analyzer" => $analyzerName,
+                "search_analyzer" => $searchAnalyzerName,
                 "term_vector" => "with_positions_offsets",
             ];
         }

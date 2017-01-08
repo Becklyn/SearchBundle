@@ -153,10 +153,11 @@ becklyn_search:
             type: stemmer
             name: english
     unlocalized:
-        analyzer: analyzer_default
+        analyzer: analyzer_default # both index and search analyzer
     localized:
         de:
-            analyzer: analyzer_en
+            index_analyzer: analyzer_en
+            search_analyzer: analyzer_en
 ```
 
 | Key                  | Description      |
@@ -167,7 +168,7 @@ becklyn_search:
 | `analyzers`          | A list of custom analyzers. The syntax mirrors the Elasticsearch API. |
 | `filters`            | A list of custom filters. The syntax mirrors the Elasticsearch API. |
 | `unlocalized`        | The definition for all unlocalized entities. Currently only the selection of a custom analyzer is possible. |
-| `localized`          | The configuration for localized entities in every language. Currently only the selection of a custom analyzer is possible. |
+| `localized`          | The configuration for localized entities in every language. Currently only the selection of a custom index analyzer and search analyzer is possible. |
 
 
 Usage

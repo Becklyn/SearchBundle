@@ -32,6 +32,7 @@ class LanguageConfiguration
      */
     private $unlocalizedData = [
         "analyzer" => "default_analyzer_de",
+        "search_analyzer" => "default_analyzer_de",
     ];
 
 
@@ -81,6 +82,37 @@ class LanguageConfiguration
      */
     public function getAnalyzer (string $language = null) : string
     {
+        return $this->fetchConfigurationValue($language, "analyzer");
+    }
+
+
+
+    /**
+     * Returns the search analyzer for the given language
+     *
+     * @param string|null $language
+     *
+     * @return string
+     * @throws InvalidSearchConfigurationException
+     */
+    public function getSearchAnalyzer (string $language = null) : string
+    {
+        return $this->fetchConfigurationValue($language, "search_analyzer");
+    }
+
+
+
+    /**
+     * Fetches a configuration value
+     *
+     * @param string|null $language
+     * @param string      $key
+     *
+     * @return string
+     * @throws InvalidSearchConfigurationException
+     */
+    private function fetchConfigurationValue (string $language = null, string $key) : string
+    {
         if (null === $language)
         {
             $data = $this->unlocalizedData;
@@ -98,7 +130,7 @@ class LanguageConfiguration
             $data = $this->languageData[$language];
         }
 
-        return $data["analyzer"];
+        return $data[$key];
     }
 
 
