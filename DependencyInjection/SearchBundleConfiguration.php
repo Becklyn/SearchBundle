@@ -84,6 +84,7 @@ class SearchBundleConfiguration implements ConfigurationInterface
                     ->prototype("array")
                         ->children()
                             ->scalarNode("analyzer")->end()
+                            ->scalarNode("index_analyzer")->end()
                             ->scalarNode("search_analyzer")->end()
                         ->end()
                     ->end()
@@ -91,8 +92,24 @@ class SearchBundleConfiguration implements ConfigurationInterface
                 ->arrayNode("unlocalized")
                     ->children()
                         ->scalarNode("analyzer")->end()
+                        ->scalarNode("index_analyzer")->end()
                         ->scalarNode("search_analyzer")->end()
                     ->end()
+                    ->validate()
+                    ->ifTrue(
+                        function (array $node)
+                        {
+                            // index and search analyzer must either both be defined or none of them.
+                            if (isset($node["index_analyzer"]) !== isset($node["search_analyzer"]))
+                            {
+                                return true;
+                            }
+
+                            // analyzer AND index/search analyzer shouldn't both be defined.
+                            return isset($node["analyzer"]) === isset($node["index_analyzer"]);
+                        }
+                    )
+                    ->thenInvalid("You must either define 'analyzer' or both 'index_analyzer' and 'search_analyzer'.")
                 ->end()
             ->end();
 
