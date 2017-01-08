@@ -26,8 +26,8 @@ class SearchBundleExtension extends Extension
 
         // set config for elasticsearch client
         $container->getDefinition("becklyn.search.elasticsearch")
-            ->replaceArgument(0, $config["server"])
-            ->replaceArgument(1, $config["index"]);
+            ->replaceArgument(1, $config["server"])
+            ->replaceArgument(2, $config["index"]);
 
         // set config for metadata analysis
         $container->getDefinition("becklyn.search.index.configuration.analysis")

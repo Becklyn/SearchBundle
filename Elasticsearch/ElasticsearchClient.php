@@ -37,16 +37,14 @@ class ElasticsearchClient
 
 
     /**
-     * @param string   $host
-     * @param string   $index
-     * @param Metadata $metadata
+     * @param ElasticsearchApiFactory $apiFactory
+     * @param string                  $host
+     * @param string                  $index
+     * @param Metadata                $metadata
      */
-    public function __construct (string $host, string $index, Metadata $metadata)
+    public function __construct (ElasticsearchApiFactory $apiFactory, string $host, string $index, Metadata $metadata)
     {
-        $this->client = ClientBuilder::create()
-            ->setHosts([$host])
-            ->build();
-
+        $this->client = $apiFactory->buildApiClient($host);
         $this->index = $index;
         $this->metadata = $metadata;
     }

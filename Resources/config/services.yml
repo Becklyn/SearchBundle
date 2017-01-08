@@ -72,9 +72,14 @@ services:
     becklyn.search.elasticsearch:
         class: Becklyn\SearchBundle\Elasticsearch\ElasticsearchClient
         arguments:
+            - '@becklyn.search.api.client_factory'
             - ~ # set via configuration
             - ~ # set via configuration
             - '@becklyn.search.metadata'
+        public: false
+
+    becklyn.search.api.client_factory:
+        class: Becklyn\SearchBundle\Elasticsearch\ElasticsearchApiFactory
         public: false
 
 
