@@ -9,7 +9,6 @@ use Becklyn\SearchBundle\Exception\MissingLanguageException;
 use Becklyn\SearchBundle\Index\Configuration\LanguageConfiguration;
 use Becklyn\SearchBundle\Loader\EntityLoader;
 use Becklyn\SearchBundle\Metadata\Metadata;
-use Becklyn\SearchBundle\Metadata\SearchItem;
 use Becklyn\SearchBundle\Metadata\SearchItem\SearchItemList;
 use Becklyn\SearchBundle\Search\Result\SearchHit;
 use Becklyn\SearchBundle\Search\Result\SearchResult;
@@ -201,116 +200,5 @@ class SearchClient
         }
 
         return $groupedResults;
-    }
-
-
-
-    /**
-     * Loads the entities of the result
-     *
-     * @param array        $groupedResults
-     * @param SearchItem[] $itemsToSearch
-     *
-     * @return array.<SearchResultItem[]>
-     */
-    private function loadResults (array $groupedResults, array $itemsToSearch) : array
-    {
-        $loadedResults = [];
-
-        foreach ($groupedResults as $type => $hits)
-        {
-            $item = $itemsToSearch[$type];
-            $ids = array_column($hits, ElasticsearchClient::ENTITY_ID_FIELD);
-            $loadedEntities = $this->entityLoader->loadEntities($item, $ids);
-
-            foreach ($hits as $hit)
-            {
-                $entity = $loadedEntities[$hit[ElasticsearchClient::ENTITY_ID_FIELD]] ?? null;
-
-                if (null === $entity)
-                {
-                    continue;
-                }
-
-                $loadedResults[$item->getFqcn()][] = new SearchResultItem(
-                    $entity,
-                    $hit["_score"],
-                    array_merge(...array_values($hit["highlight"]))
-                );
-            }
-        }
-
-        return $loadedResults;
-    }
-
-
-
-    /**
-     * Groups the raw elasticsearch results by type
-     *
-     * @param array $rawResults
-     *
-     * @return array
-     */
-    private function groupRawResultsByType (array $rawResults) : array
-    {
-        $grouped = [];
-
-        foreach ($rawResults as $rawResult)
-        {
-            $grouped[$rawResult["_type"]][] = $rawResult;
-        }
-
-        return $grouped;
-    }
-
-
-
-
-    /**
-     * Builds the query parameters, that will be passed to elasticsearch
-     *
-     * @param string       $query
-     * @param SearchItem[] $searchItems
-     *
-     * @return array
-     */
-    private function buildQuery (string $query, array $searchItems) : array
-    {
-        $queryFields = [];
-        $highlightFields = [];
-
-        foreach ($searchItems as $item)
-        {
-            foreach ($item->getFields() as $field)
-            {
-                $queryFields[] = [
-                    "match" => [
-                        $field->getElasticsearchFieldName() => [
-                            "query" => $query,
-                            "boost" => $field->getWeight(),
-                        ],
-                    ],
-                ];
-
-                $highlightFields[$field->getElasticsearchFieldName()] = [
-                    "number_of_fragments" => $field->getNumberOfFragments(),
-                ];
-            }
-        }
-
-        return [
-            "_source" => false,
-            "query" => [
-                "bool" => [
-                    "should" => $queryFields,
-                ],
-            ],
-            "highlight" => [
-                "pre_tags" => ["<mark>"],
-                "post_tags" => ["</mark>"],
-                "fields" => $highlightFields,
-            ],
-        ];
     }
 }
