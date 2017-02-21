@@ -6,14 +6,12 @@ use Becklyn\Interfaces\LanguageInterface;
 use Becklyn\SearchBundle\Elasticsearch\ElasticsearchClient;
 use Becklyn\SearchBundle\Elasticsearch\Request\SearchRequest;
 use Becklyn\SearchBundle\Exception\MissingLanguageException;
-use Becklyn\SearchBundle\Exception\UnknownItemException;
 use Becklyn\SearchBundle\Index\Configuration\LanguageConfiguration;
 use Becklyn\SearchBundle\Loader\EntityLoader;
 use Becklyn\SearchBundle\Metadata\Metadata;
 use Becklyn\SearchBundle\Metadata\SearchItem;
 use Becklyn\SearchBundle\Metadata\SearchItem\SearchItemList;
 use Becklyn\SearchBundle\Search\Result\SearchHit;
-use Becklyn\SearchBundle\Search\Result\EntitySearchHits;
 use Becklyn\SearchBundle\Search\Result\SearchResult;
 use Becklyn\SearchBundle\Search\Result\SearchResultBuilder;
 
@@ -89,13 +87,27 @@ class SearchClient
             }
 
             $index = $this->languageConfiguration->getIndexName($language->getCode());
-            $requests[] = new SearchRequest($index, $query, $language, $localizedItems);
+
+            // Right now there seems to be some issue with ElasticSearch not being able to search
+            // a larger number of indices in a multi-index search. Hence why we split up each entity
+            // into its own search request
+            foreach ($localizedItems as $localizedItem)
+            {
+                $requests[] = new SearchRequest($index, $query, $language, $localizedItem);
+            }
         }
 
         if (!empty($unlocalizedItems))
         {
             $index = $this->languageConfiguration->getIndexName(null);
-            $requests[] = new SearchRequest($index, $query, null, $unlocalizedItems);
+
+            // Right now there seems to be some issue with ElasticSearch not being able to search
+            // a larger number of indices in a multi-index search. Hence why we split up each entity
+            // into its own search request
+            foreach ($unlocalizedItems as $unlocalizedItem)
+            {
+                $requests[] = new SearchRequest($index, $query, null, $unlocalizedItem);
+            }
         }
 
         return $this->buildSearchResult(
