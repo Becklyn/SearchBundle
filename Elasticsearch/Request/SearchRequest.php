@@ -26,9 +26,9 @@ class SearchRequest extends ElasticsearchRequest
 
 
     /**
-     * @var SearchItem[]
+     * @var SearchItem
      */
-    private $items;
+    private $item;
 
 
 
@@ -36,14 +36,14 @@ class SearchRequest extends ElasticsearchRequest
      * @param string                 $index
      * @param string                 $query
      * @param LanguageInterface|null $language
-     * @param SearchItem[]           $items
+     * @param SearchItem             $item
      */
-    public function __construct ($index, string $query, LanguageInterface $language = null, array $items)
+    public function __construct ($index, string $query, LanguageInterface $language = null, SearchItem $item)
     {
         parent::__construct($index, "search");
         $this->query = $query;
         $this->language = $language;
-        $this->items = $items;
+        $this->item = $item;
     }
 
 
@@ -54,7 +54,7 @@ class SearchRequest extends ElasticsearchRequest
     public function getData () : array
     {
         return array_replace(parent::getData(), [
-            "type" => $this->getElasticsearchTypes(),
+            "type" => $this->item->getElasticsearchType(),
             "body" => [
                 "_source" => [
                     ElasticsearchClient::ENTITY_ID_FIELD,
@@ -75,19 +75,6 @@ class SearchRequest extends ElasticsearchRequest
 
 
 
-    private function getElasticsearchTypes ()
-    {
-        return array_map(
-            function (SearchItem $item)
-            {
-                return $item->getElasticsearchType();
-            },
-            $this->items
-        );
-    }
-
-
-
     /**
      * Returns the serialized query fields
      *
@@ -97,19 +84,16 @@ class SearchRequest extends ElasticsearchRequest
     {
         $queryFields = [];
 
-        foreach ($this->items as $item)
+        foreach ($this->item->getFields() as $field)
         {
-            foreach ($item->getFields() as $field)
-            {
-                $queryFields[] = [
-                    "match" => [
-                        $field->getElasticsearchFieldName() => [
-                            "query" => $this->query,
-                            "boost" => $field->getWeight(),
-                        ],
+            $queryFields[] = [
+                "match" => [
+                    $field->getElasticsearchFieldName() => [
+                        "query" => $this->query,
+                        "boost" => $field->getWeight(),
                     ],
-                ];
-            }
+                ],
+            ];
         }
 
         return $queryFields;
@@ -126,14 +110,11 @@ class SearchRequest extends ElasticsearchRequest
     {
         $highlightFields = [];
 
-        foreach ($this->items as $item)
+        foreach ($this->item->getFields() as $field)
         {
-            foreach ($item->getFields() as $field)
-            {
-                $highlightFields[$field->getElasticsearchFieldName()] = [
-                    "number_of_fragments" => $field->getNumberOfFragments(),
-                ];
-            }
+            $highlightFields[$field->getElasticsearchFieldName()] = [
+                "number_of_fragments" => $field->getNumberOfFragments(),
+            ];
         }
 
         return $highlightFields;
