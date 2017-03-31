@@ -12,13 +12,13 @@ namespace Becklyn\SearchBundle\Mapping;
 class Field
 {
     /**
-     * @var int
+     * @var integer
      */
     public $weight = 1;
 
 
     /**
-     * @var int|null
+     * @var integer|null
      */
     public $fragments = null;
 
