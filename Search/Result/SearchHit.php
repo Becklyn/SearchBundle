@@ -68,6 +68,11 @@ class SearchHit
      */
     public function getAllHighlights () : array
     {
+        if (empty($this->highlights))
+        {
+            return [];
+        }
+
         return array_merge(...array_values($this->highlights));
     }
 
