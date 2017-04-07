@@ -41,7 +41,7 @@ class IndexCreateRequest extends ElasticsearchRequest
 
     /**
      * @param string                $language
-     * @param array                 $searchItems
+     * @param SearchItem[]          $searchItems
      * @param LanguageConfiguration $languageConfiguration
      * @param AnalysisConfiguration $analysisConfiguration
      */
@@ -183,6 +183,14 @@ class IndexCreateRequest extends ElasticsearchRequest
                 "analyzer" => $indexAnalyzer,
                 "search_analyzer" => $searchAnalyzer,
                 "term_vector" => "with_positions_offsets",
+            ];
+        }
+
+        foreach ($item->getFilters() as $filter)
+        {
+            $mapping["properties"][$filter->getElasticsearchFieldName()] = [
+                "type" => "string",
+                "index" => "not_analyzed",
             ];
         }
 

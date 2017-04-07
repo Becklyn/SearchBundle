@@ -30,6 +30,12 @@ class SearchItem
 
 
     /**
+     * @var SearchItemFilter[]
+     */
+    private $filters = [];
+
+
+    /**
      * @var bool
      */
     private $localized;
@@ -86,6 +92,15 @@ class SearchItem
     }
 
 
+    /**
+     * @return SearchItemFilter[]
+     */
+    public function getFilters () : array
+    {
+        return $this->filters;
+    }
+
+
 
     /**
      * @return bool
@@ -120,5 +135,22 @@ class SearchItem
         }
 
         $this->fields[$field->getElasticsearchFieldName()] = $field;
+    }
+
+
+
+    /**
+     * @param SearchItemFilter $filter
+     *
+     * @throws DuplicateItemFieldNameException
+     */
+    public function addFilter (SearchItemFilter $filter)
+    {
+        if (isset($this->filters[$filter->getElasticsearchFieldName()]))
+        {
+            throw new DuplicateItemFieldNameException($filter->getName(), $filter->getAccessorType(), $this->getFqcn());
+        }
+
+        $this->filters[$filter->getElasticsearchFieldName()] = $filter;
     }
 }

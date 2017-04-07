@@ -31,19 +31,27 @@ class SearchRequest extends ElasticsearchRequest
     private $item;
 
 
+    /**
+     * @var array
+     */
+    private $filters;
+
+
 
     /**
      * @param string                 $index
      * @param string                 $query
      * @param LanguageInterface|null $language
      * @param SearchItem             $item
+     * @param array                  $filters
      */
-    public function __construct ($index, string $query, LanguageInterface $language = null, SearchItem $item)
+    public function __construct ($index, string $query, LanguageInterface $language = null, SearchItem $item, array $filters = [])
     {
         parent::__construct($index, "search");
         $this->query = $query;
         $this->language = $language;
         $this->item = $item;
+        $this->filters = $filters;
     }
 
 
@@ -62,6 +70,7 @@ class SearchRequest extends ElasticsearchRequest
                 "query" => [
                     "bool" => [
                         "should" => $this->serializeQueryFields(),
+                        "filter" => $this->serializeFilters(),
                     ],
                 ],
                 "highlight" => [
@@ -118,5 +127,31 @@ class SearchRequest extends ElasticsearchRequest
         }
 
         return $highlightFields;
+    }
+
+
+
+    /**
+     * Serializes the filters
+     *
+     * @return array
+     */
+    private function serializeFilters () : array
+    {
+        if (empty($this->filters))
+        {
+            return [];
+        }
+
+        $terms = [];
+
+        foreach ($this->filters as $name => $value)
+        {
+            $terms["filter-{$name}"] = $value;
+        }
+
+        return [
+            "term" => $terms,
+        ];
     }
 }

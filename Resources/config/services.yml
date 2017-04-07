@@ -31,7 +31,6 @@ services:
     # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     # Commands
     # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
     becklyn.search.command.index:
         class: Becklyn\SearchBundle\Command\IndexCommand
         arguments:
@@ -42,6 +41,15 @@ services:
             - '@becklyn.search.indexer'
             - '@becklyn.search.entity_loader'
             - '@doctrine'
+        tags:
+            - { name: console.command }
+
+    becklyn.search.command.metadata:
+        class: Becklyn\SearchBundle\Command\MetadataCommand
+        arguments:
+            - '@becklyn.search.metadata'
+            - '@becklyn.search.metadata.generator'
+            - '@kernel'
         tags:
             - { name: console.command }
 

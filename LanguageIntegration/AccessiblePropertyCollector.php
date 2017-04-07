@@ -38,11 +38,12 @@ class AccessiblePropertyCollector
      * Searches all possible properties defined in the complete class hierarchy that are accessible
      *
      * @param \ReflectionClass $class
+     * @param string           $annotationClass
      *
-     * @return AnnotatedProperty[]
+     * @return array|AnnotatedProperty[]
      * @throws InvalidSearchConfigurationException
      */
-    public function getProperties (\ReflectionClass $class) : array
+    public function getProperties (\ReflectionClass $class, string $annotationClass) : array
     {
         $items = function (\ReflectionClass $class)
         {
@@ -55,7 +56,7 @@ class AccessiblePropertyCollector
         foreach ($properties as $property)
         {
             /** @var Field $annotation */
-            $annotation = $this->reader->getPropertyAnnotation($property, Field::class);
+            $annotation = $this->reader->getPropertyAnnotation($property, $annotationClass);
 
             if (null === $annotation)
             {
@@ -83,11 +84,12 @@ class AccessiblePropertyCollector
      * Searches all possible methods defined in the complete class hierarchy that are accessible
      *
      * @param \ReflectionClass $class
+     * @param string           $annotationClass
      *
-     * @return AnnotatedMethod[]
+     * @return array|AnnotatedMethod[]
      * @throws InvalidSearchConfigurationException
      */
-    public function getMethods (\ReflectionClass $class) : array
+    public function getMethods (\ReflectionClass $class, string $annotationClass) : array
     {
         $items = function (\ReflectionClass $class)
         {
@@ -100,7 +102,7 @@ class AccessiblePropertyCollector
         foreach ($methods as $method)
         {
             /** @var Field $annotation */
-            $annotation = $this->reader->getMethodAnnotation($method, Field::class);
+            $annotation = $this->reader->getMethodAnnotation($method, $annotationClass);
 
             if (null === $annotation)
             {

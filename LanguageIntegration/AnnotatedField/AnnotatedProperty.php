@@ -17,7 +17,7 @@ class AnnotatedProperty
 
 
     /**
-     * @var Field
+     * @var object
      */
     private $annotation;
 
@@ -25,9 +25,9 @@ class AnnotatedProperty
 
     /**
      * @param \ReflectionProperty $property
-     * @param Field               $annotation
+     * @param object              $annotation
      */
-    public function __construct (\ReflectionProperty $property, Field $annotation)
+    public function __construct (\ReflectionProperty $property, $annotation)
     {
         $this->property = $property;
         $this->annotation = $annotation;
@@ -46,9 +46,9 @@ class AnnotatedProperty
 
 
     /**
-     * @return Field
+     * @return object
      */
-    public function getAnnotation () : Field
+    public function getAnnotation ()
     {
         return $this->annotation;
     }

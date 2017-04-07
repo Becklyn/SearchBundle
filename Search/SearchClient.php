@@ -67,11 +67,12 @@ class SearchClient
      * @param string            $query
      * @param LanguageInterface $language
      * @param array             $itemClasses FQCN of all classes that should be searched. Empty array searches all classes
+     * @param array             $filters
      *
      * @return SearchResult
      * @throws MissingLanguageException
      */
-    public function search (string $query, LanguageInterface $language = null, array $itemClasses = []) : SearchResult
+    public function search (string $query, LanguageInterface $language = null, array $itemClasses = [], array $filters = []) : SearchResult
     {
         $items = $this->allItems->filterByClass($itemClasses);
         $localizedItems = $items->getLocalizedItems();
@@ -92,7 +93,7 @@ class SearchClient
             // into its own search request
             foreach ($localizedItems as $localizedItem)
             {
-                $requests[] = new SearchRequest($index, $query, $language, $localizedItem);
+                $requests[] = new SearchRequest($index, $query, $language, $localizedItem, $filters);
             }
         }
 
@@ -105,7 +106,7 @@ class SearchClient
             // into its own search request
             foreach ($unlocalizedItems as $unlocalizedItem)
             {
-                $requests[] = new SearchRequest($index, $query, null, $unlocalizedItem);
+                $requests[] = new SearchRequest($index, $query, null, $unlocalizedItem, $filters);
             }
         }
 

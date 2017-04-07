@@ -90,6 +90,11 @@ class IndexDocumentRequest extends ElasticsearchRequest
             $data[$field->getElasticsearchFieldName()] = $this->valueAccessor->getValue($this->entity, $field);
         }
 
+        foreach ($this->item->getFilters() as $filter)
+        {
+            $data[$filter->getElasticsearchFieldName()] = $this->valueAccessor->getRawValue($this->entity, $filter);
+        }
+
         return $data;
     }
 }

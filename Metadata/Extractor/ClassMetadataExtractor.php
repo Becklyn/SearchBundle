@@ -4,6 +4,8 @@ namespace Becklyn\SearchBundle\Metadata\Extractor;
 
 use Becklyn\SearchBundle\Entity\SearchableEntityInterface;
 use Becklyn\SearchBundle\Exception\InvalidSearchConfigurationException;
+use Becklyn\SearchBundle\Mapping\Filter;
+use Becklyn\SearchBundle\Metadata\SearchItemFilter;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Becklyn\SearchBundle\Entity\LocalizedSearchableEntityInterface;
 use Becklyn\SearchBundle\LanguageIntegration\AccessiblePropertyCollector;
@@ -89,9 +91,21 @@ class ClassMetadataExtractor
         }
 
         // Collect all indexed methods, that may have no backing field (as in "are computed")
-        foreach ($this->collectEntityMethods($class) as $field)
+        foreach ($this->collectMethodFields($class) as $field)
         {
             $item->addField($field);
+        }
+
+        // Collect all property filters
+        foreach ($this->collectPropertyFilters($class) as $filter)
+        {
+            $item->addFilter($filter);
+        }
+
+        // Collect all methods
+        foreach ($this->collectMethodFilters($class) as $filter)
+        {
+            $item->addFilter($filter);
         }
 
         return $item;
@@ -110,9 +124,10 @@ class ClassMetadataExtractor
     {
         $properties = [];
 
-        foreach ($this->propertyCollector->getProperties($class) as $annotatedProperty)
+        foreach ($this->propertyCollector->getProperties($class, Field::class) as $annotatedProperty)
         {
             $property = $annotatedProperty->getProperty();
+            /** @var Field $annotation */
             $annotation = $annotatedProperty->getAnnotation();
 
             $propertyMetadata = new SearchItemField(
@@ -138,13 +153,14 @@ class ClassMetadataExtractor
      *
      * @return SearchItemField[]
      */
-    private function collectEntityMethods (\ReflectionClass $class)
+    private function collectMethodFields (\ReflectionClass $class)
     {
         $methods = [];
 
-        foreach ($this->propertyCollector->getMethods($class) as $annotatedMethod)
+        foreach ($this->propertyCollector->getMethods($class, Field::class) as $annotatedMethod)
         {
             $method = $annotatedMethod->getMethod();
+            /** @var Field $annotation */
             $annotation = $annotatedMethod->getAnnotation();
 
             $propertyMetadata = new SearchItemField(
@@ -153,6 +169,68 @@ class ClassMetadataExtractor
                 $annotation->weight,
                 $annotation->format,
                 $annotation->fragments
+            );
+
+            $methods[] = $propertyMetadata;
+        }
+
+        return $methods;
+    }
+
+
+
+    /**
+     * Collects all indexable entity property filters
+     *
+     * @param \ReflectionClass $class
+     *
+     * @return SearchItemFilter[]
+     */
+    private function collectPropertyFilters (\ReflectionClass $class)
+    {
+        $properties = [];
+
+        foreach ($this->propertyCollector->getProperties($class, Filter::class) as $annotatedProperty)
+        {
+            $property = $annotatedProperty->getProperty();
+            /** @var Filter $annotation */
+            $annotation = $annotatedProperty->getAnnotation();
+
+            $propertyMetadata = new SearchItemFilter(
+                $property->getName(),
+                $annotation->name,
+                SearchItemField::ACCESSOR_TYPE_PROPERTY
+            );
+
+            $properties[] = $propertyMetadata;
+        }
+
+        return $properties;
+    }
+
+
+
+    /**
+     * Collects all indexable entity method filters
+     *
+     * @param \ReflectionClass $class
+     *
+     * @return SearchItemFilter[]
+     */
+    private function collectMethodFilters (\ReflectionClass $class)
+    {
+        $methods = [];
+
+        foreach ($this->propertyCollector->getMethods($class, Filter::class) as $annotatedMethod)
+        {
+            $method = $annotatedMethod->getMethod();
+            /** @var Filter $annotation */
+            $annotation = $annotatedProperty->getAnnotation();
+
+            $propertyMetadata = new SearchItemFilter(
+                $method->getName(),
+                $annotation->name,
+                SearchItemField::ACCESSOR_TYPE_METHOD
             );
 
             $methods[] = $propertyMetadata;

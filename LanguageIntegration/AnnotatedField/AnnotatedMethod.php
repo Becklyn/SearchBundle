@@ -16,7 +16,7 @@ class AnnotatedMethod
 
 
     /**
-     * @var Field
+     * @var object
      */
     private $annotation;
 
@@ -24,9 +24,9 @@ class AnnotatedMethod
 
     /**
      * @param \ReflectionMethod $method
-     * @param Field               $annotation
+     * @param object            $annotation
      */
-    public function __construct (\ReflectionMethod $method, Field $annotation)
+    public function __construct (\ReflectionMethod $method, $annotation)
     {
         $this->method = $method;
         $this->annotation = $annotation;
@@ -45,9 +45,9 @@ class AnnotatedMethod
 
 
     /**
-     * @return Field
+     * @return object
      */
-    public function getAnnotation () : Field
+    public function getAnnotation ()
     {
         return $this->annotation;
     }

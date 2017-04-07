@@ -2,11 +2,13 @@
 
 namespace Becklyn\SearchBundle\Metadata;
 
+use Becklyn\SearchBundle\Metadata\SearchItem\SearchItemContentInterface;
+
 
 /**
  * An indexed field of a searchable entity
  */
-class SearchItemField
+class SearchItemField implements SearchItemContentInterface
 {
     const ACCESSOR_TYPE_PROPERTY = "property";
     const ACCESSOR_TYPE_METHOD = "method";
@@ -126,5 +128,15 @@ class SearchItemField
     public function getAccessorType () : string
     {
         return $this->accessorType;
+    }
+
+
+
+    /**
+     * @inheritdoc
+     */
+    public function getAccessorName () : string
+    {
+        return $this->getName();
     }
 }

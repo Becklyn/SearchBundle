@@ -4,6 +4,7 @@ namespace Becklyn\SearchBundle\Accessor;
 
 use Becklyn\SearchBundle\Entity\SearchableEntityInterface;
 use Becklyn\SearchBundle\FormatProcessor\TextFormatProcessor;
+use Becklyn\SearchBundle\Metadata\SearchItem\SearchItemContentInterface;
 use Becklyn\SearchBundle\Metadata\SearchItemField;
 use Becklyn\SearchText\SearchTextTransformer;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
@@ -72,9 +73,28 @@ class EntityValueAccessor
      */
     public function getValue (SearchableEntityInterface $entity, SearchItemField $field) : string
     {
-        $value = (string) $this->accessor->getValue($entity, $field->getName());
+        $value = (string) $this->getRawValue($entity, $field);
 
         return $this->processValue($field, $value);
+    }
+
+
+
+    /**
+     * Returns the raw value of the field
+     *
+     * @param SearchableEntityInterface  $entity
+     * @param SearchItemContentInterface $content
+     *
+     * @return string|null
+     */
+    public function getRawValue (SearchableEntityInterface $entity, SearchItemContentInterface $content)
+    {
+        $value = $this->accessor->getValue($entity, $content->getAccessorName());
+
+        return !empty($value)
+            ? (string) $value
+            : null;
     }
 
 
