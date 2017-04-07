@@ -186,7 +186,8 @@ Just get the `becklyn.search.client` service and search with it:
 $searchResult = $this->get("becklyn.search.client")->search(
     string $query, 
     LanguageInterface $language = null, 
-    array $itemClasses = []
+    array $itemClasses = [],
+    array $filters = []
 );
 ```
 
@@ -197,6 +198,7 @@ The method has three parameters:
 | `query`       | `string`                 | The query string to search for.                                                                                               |
 | `language`    | `LanguageInterface|null` | The language with which the items should be searched. If at least one item is localized, this parameter is **required**.      |
 | `itemClasses` | `string[]`               | The FQCN of the entities, that should be searched. If no explicit entity class is given, all (indexed) entities are searched. |
+| `filters`     | `string[]`               | The filter values. See the chapter about Filtering for details.                                                               |
 
 
 
@@ -244,3 +246,46 @@ If the loader is called with `int[]`, only the entities with an id in the `int` 
 It is not required to load entities for *all* provided ids, as the missing search results will just be removed from the result list.
 
 The loader **must** return an `EntityLoaderResult`.
+
+
+Filtering
+---------
+
+In some cases the searched items should be filtered by a field other than the language.
+
+```php
+use Becklyn\SearchBundle\Mapping as Search;
+
+class SomeClass 
+{
+    /**
+     * @Search\Filter("filter")
+     */
+    public $property;
+    
+    /**
+     * @Search\Filter("another-filter")
+     */
+    public function method ()
+    {
+        // ...
+    }
+}
+```
+
+The annotation has a single required attribute: the name of the filter.
+This name needs to be unique across the app.
+
+When searching, you can filter for hits with this specific filter values like this:
+
+```php
+$searchResult = $this->get("becklyn.search.client")->search(
+    "some search text", 
+    $english, 
+    [],
+    [
+        "filter" => "value",
+        "another-filter" => "another value",
+    ]
+);
+```
