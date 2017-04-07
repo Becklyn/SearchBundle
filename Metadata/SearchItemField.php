@@ -10,7 +10,7 @@ class SearchItemField
 {
     const ACCESSOR_TYPE_PROPERTY = "property";
     const ACCESSOR_TYPE_METHOD = "method";
-    const FRAGMENTATION_DEFAULT = 5;
+    const FRAGMENTATION_DEFAULT = 3;
 
 
     /**
