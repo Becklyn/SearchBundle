@@ -21,9 +21,14 @@ class AnalysisConfiguration
             "name" => "light_german",
         ],
         "default_filter_shingle" => [
+            "type" => "shingle",
             "min_shingle_size" => 2,
             "max_shingle_size" => 5,
-            "type" => "shingle",
+        ],
+        "default_ngram" => [
+            "type" => "ngram",
+            "min_gram" => 3,
+            "max_gram" => 25,
         ],
     ];
 
@@ -35,6 +40,7 @@ class AnalysisConfiguration
                 "lowercase",
                 "default_filter_de",
                 "asciifolding",
+                "default_ngram",
                 "default_filter_shingle",
             ],
             "type" => "custom",
