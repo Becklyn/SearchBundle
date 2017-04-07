@@ -4,6 +4,7 @@ namespace Becklyn\SearchBundle\Metadata;
 
 
 use Becklyn\SearchBundle\Exception\DuplicateItemFieldNameException;
+use Becklyn\SearchBundle\Exception\DuplicateItemFilterNameException;
 
 
 /**
@@ -142,13 +143,13 @@ class SearchItem
     /**
      * @param SearchItemFilter $filter
      *
-     * @throws DuplicateItemFieldNameException
+     * @throws DuplicateItemFilterNameException
      */
     public function addFilter (SearchItemFilter $filter)
     {
         if (isset($this->filters[$filter->getElasticsearchFieldName()]))
         {
-            throw new DuplicateItemFieldNameException($filter->getName(), $filter->getAccessorType(), $this->getFqcn());
+            throw new DuplicateItemFilterNameException($filter->getFilterName(), $this->getFqcn());
         }
 
         $this->filters[$filter->getElasticsearchFieldName()] = $filter;
