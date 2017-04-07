@@ -225,7 +225,7 @@ class ClassMetadataExtractor
         {
             $method = $annotatedMethod->getMethod();
             /** @var Filter $annotation */
-            $annotation = $annotatedProperty->getAnnotation();
+            $annotation = $annotatedMethod->getAnnotation();
 
             $propertyMetadata = new SearchItemFilter(
                 $method->getName(),
