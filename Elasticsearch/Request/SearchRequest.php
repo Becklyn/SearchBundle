@@ -70,6 +70,7 @@ class SearchRequest extends ElasticsearchRequest
                 "query" => [
                     "bool" => [
                         "should" => $this->serializeQueryFields(),
+                        "minimum_should_match" => 1,
                         "filter" => $this->serializeFilters(),
                     ],
                 ],
