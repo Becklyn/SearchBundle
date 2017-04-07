@@ -213,6 +213,32 @@ $this->get("becklyn.search.indexer")->index(SearchableEntityInterface $entity);
 ```
 
 
+#### Modifying the indexed data
+
+The indexed data can be modified by listening to the `"becklyn_search.index"` event (or `Becklyn\SearchBundle\Event\IndexEntityEvent::EVENT`).
+
+Your listener receives an `Becklyn\SearchBundle\Event\IndexEntityEvent` with the already serialized data and the entity to serialize:
+
+```php
+use Becklyn\SearchBundle\Event\IndexEntityEvent;
+
+public function myEventListener (IndexEntityEvent $event)
+{
+    $data = $event->getData();
+    $entity = $event->getEntity();
+    
+    if (42 === $entity->getId())
+    {
+        $data["property-headline"] = "The answer to everything.";
+        $event->setData($data);
+    }
+}
+```
+
+For now, the listener has to know the internal field name, unfortunately. This will be improved in a future version.
+
+
+
 Entity Loader
 -------------
 

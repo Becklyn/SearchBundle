@@ -6,7 +6,9 @@ use Becklyn\SearchBundle\Accessor\EntityValueAccessor;
 use Becklyn\SearchBundle\Elasticsearch\ElasticsearchClient;
 use Becklyn\SearchBundle\Elasticsearch\ElasticsearchRequest;
 use Becklyn\SearchBundle\Entity\SearchableEntityInterface;
+use Becklyn\SearchBundle\Event\IndexEntityEvent;
 use Becklyn\SearchBundle\Metadata\SearchItem;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 
 /**
@@ -32,20 +34,34 @@ class IndexDocumentRequest extends ElasticsearchRequest
     private $valueAccessor;
 
 
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
+
+
 
     /**
      * @param string                    $index
      * @param SearchableEntityInterface $entity
      * @param SearchItem                $item
      * @param EntityValueAccessor       $valueAccessor
+     * @param EventDispatcherInterface  $dispatcher
      */
-    public function __construct ($index, SearchableEntityInterface $entity, SearchItem $item, EntityValueAccessor $valueAccessor)
+    public function __construct (
+        $index,
+        SearchableEntityInterface $entity,
+        SearchItem $item,
+        EntityValueAccessor $valueAccessor,
+        EventDispatcherInterface $dispatcher
+    )
     {
         parent::__construct($index, "index");
 
         $this->entity = $entity;
         $this->item = $item;
         $this->valueAccessor = $valueAccessor;
+        $this->dispatcher = $dispatcher;
     }
 
 
@@ -95,6 +111,9 @@ class IndexDocumentRequest extends ElasticsearchRequest
             $data[$filter->getElasticsearchFieldName()] = $this->valueAccessor->getRawValue($this->entity, $filter);
         }
 
-        return $data;
+        $event = new IndexEntityEvent($data, $this->entity);
+        $this->dispatcher->dispatch($event::EVENT, $event);
+
+        return $event->getData();
     }
 }

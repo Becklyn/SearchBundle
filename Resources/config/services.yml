@@ -15,6 +15,7 @@ services:
             - '@becklyn.search.metadata'
             - '@becklyn.search.index.configuration.language'
             - '@becklyn.search.accessor.entity_value'
+            - '@event_dispatcher'
 
 
     # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

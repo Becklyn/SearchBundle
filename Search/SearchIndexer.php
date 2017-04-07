@@ -8,6 +8,7 @@ use Becklyn\SearchBundle\Elasticsearch\Request\IndexDocumentRequest;
 use Becklyn\SearchBundle\Entity\SearchableEntityInterface;
 use Becklyn\SearchBundle\Index\Configuration\LanguageConfiguration;
 use Becklyn\SearchBundle\Metadata\Metadata;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
@@ -47,20 +48,28 @@ class SearchIndexer
     private $valueAccessor;
 
 
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
+
+
 
     /**
-     * @param ElasticsearchClient   $client
-     * @param Metadata              $metadata
-     * @param LanguageConfiguration $languageConfiguration
-     * @param EntityValueAccessor   $valueAccessor
+     * @param ElasticsearchClient      $client
+     * @param Metadata                 $metadata
+     * @param LanguageConfiguration    $languageConfiguration
+     * @param EntityValueAccessor      $valueAccessor
+     * @param EventDispatcherInterface $dispatcher
      */
-    public function __construct (ElasticsearchClient $client, Metadata $metadata, LanguageConfiguration $languageConfiguration, EntityValueAccessor $valueAccessor)
+    public function __construct (ElasticsearchClient $client, Metadata $metadata, LanguageConfiguration $languageConfiguration, EntityValueAccessor $valueAccessor, EventDispatcherInterface $dispatcher)
     {
         $this->client = $client;
         $this->metadata = $metadata;
         $this->accessor = PropertyAccess::createPropertyAccessor();
         $this->languageConfiguration = $languageConfiguration;
         $this->valueAccessor = $valueAccessor;
+        $this->dispatcher = $dispatcher;
     }
 
 
@@ -126,6 +135,6 @@ class SearchIndexer
         }
 
         $index = $this->languageConfiguration->getIndexForEntity($entity);
-        return new IndexDocumentRequest($index, $entity, $item, $this->valueAccessor);
+        return new IndexDocumentRequest($index, $entity, $item, $this->valueAccessor, $this->dispatcher);
     }
 }
