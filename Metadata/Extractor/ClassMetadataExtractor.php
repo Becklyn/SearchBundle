@@ -81,7 +81,8 @@ class ClassMetadataExtractor
             $class->getName(),
             $annotation->index ?: $this->generateElasticsearchTypeName($class),
             $class->implementsInterface(LocalizedSearchableEntityInterface::class),
-            $annotation->loader
+            $annotation->loader,
+            $annotation->autoIndex
         );
 
         // Collect all indexed properties

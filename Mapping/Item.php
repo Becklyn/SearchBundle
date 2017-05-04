@@ -21,4 +21,13 @@ class Item
      * @var string
      */
     public $loader = null;
+
+
+    /**
+     * Determines whether the searchable item should be indexed automatically
+     * whenever it's persisted or updated in Doctrine
+     *
+     * @var bool
+     */
+    public $autoIndex = true;
 }
