@@ -48,19 +48,27 @@ class SearchItem
     private $loader;
 
 
+    /**
+     * @var bool
+     */
+    private $autoIndex = true;
+
+
 
     /**
      * @param string      $fqcn
      * @param string      $elasticsearchType
      * @param bool        $localized
      * @param string|null $loader
+     * @param bool        $autoIndex
      */
-    public function __construct (string $fqcn, string $elasticsearchType, bool $localized, string $loader = null)
+    public function __construct (string $fqcn, string $elasticsearchType, bool $localized, string $loader = null, bool $autoIndex = true)
     {
         $this->fqcn = $fqcn;
         $this->elasticsearchType = $elasticsearchType;
         $this->localized = $localized;
         $this->loader = $loader;
+        $this->autoIndex = $autoIndex;
     }
 
 
@@ -153,5 +161,14 @@ class SearchItem
         }
 
         $this->filters[$filter->getElasticsearchFieldName()] = $filter;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function isAutoIndexed () : bool
+    {
+        return $this->autoIndex;
     }
 }

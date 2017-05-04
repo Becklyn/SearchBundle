@@ -4,6 +4,7 @@ namespace Becklyn\SearchBundle\Doctrine;
 
 use Becklyn\SearchBundle\Entity\SearchableEntityInterface;
 use Becklyn\SearchBundle\Metadata\Metadata;
+use Becklyn\SearchBundle\Metadata\SearchItem;
 use Becklyn\SearchBundle\Search\SearchIndexer;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -72,9 +73,10 @@ class DoctrineListener implements EventSubscriber
     {
         $entity = $args->getEntity();
 
+        /** @var $item SearchItem */
         foreach ($this->metadata->getAllItems() as $item)
         {
-            if (is_a($entity, $item->getFqcn()))
+            if (is_a($entity, $item->getFqcn()) && $item->isAutoIndexed())
             {
                 /** @var SearchableEntityInterface $entity */
                 $this->indexer->index($entity);
