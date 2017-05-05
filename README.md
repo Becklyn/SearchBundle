@@ -217,24 +217,24 @@ Doctrine-managed entities are by default automatically indexed upon persistence/
 
 The `Becklyn\SearchBundle\Mapping\Item` annotation allows you to configure how a search item is indexed. By default annotated classes will be indexed automatically whenever it's persisted or updated in Doctrine.
 
-For use cases where you don't want your entities to be indexed immediatelly, e.g. when it needs further processing, one can set `Becklyn\SearchBundle\Mapping\Item#autoIndex` to `false`. This will force the Doctrine lifecycle handler to ignore any entity with `Becklyn\SearchBundle\Mapping\Item#autoIndex` set to `false`.
+For use cases where you don't want your entities to be indexed immediatelly, e.g. when it needs further processing, you can set `Becklyn\SearchBundle\Mapping\Item#autoIndex` to `false`. This will force the Doctrine lifecycle handler to skip the automatic index update for this entity.
 
-This shifts the responsibility of indexing an entity from the bundle's code into the application's code by invoking the `becklyn.search.indexer`...
+**Warning** This shifts the responsibility of indexing an entity from the bundle's code into the application's code by invoking the `becklyn.search.indexer`.
 
 ```php
 $this->get("becklyn.search.indexer")->index(SearchableEntityInterface $entity);
 ```
 
-...or by running the Symfony CLI `becklyn:search:index` command. The index command isn't affected by this option.
+Or by running the Symfony CLI `becklyn:search:index` command. The index command isn't affected by this option.
 
 
 #### Manual indexing
 
 #### CLI command indexing
 
-To (re-)index your entities from the CLI, the `becklyn/search-bundle` exposes the `becklyn.search:index` command. For more commands please see the [CLI commands](#cli-commands) section.
+To (re-)index your entities from the CLI, the `becklyn/search-bundle` exposes the `becklyn:search:index` command. For more commands please see the [CLI commands](#cli-commands) section.
 
-The `becklyn:search:index` command isn't affected by the `Becklyn\SearchBundle\Mapping\Item#autoIndex`.
+The `becklyn:search:index` command indexes *all* entities irregardless of the `autoIndex` setting.
 
 #### Programatic indexing
 
@@ -352,7 +352,7 @@ $searchResult = $this->get("becklyn.search.client")->search(
 CLI Commands
 ------------
 
-This exposes multiple CLI commands.
+The bundle exposes multiple CLI commands.
 
 
 | Command                   | Description                                                          |
@@ -362,4 +362,4 @@ This exposes multiple CLI commands.
 | `becklyn:search:index`    | (Re-)indexes all entities                                            |
 | `becklyn:search:metadata` | (Re-)generates and caches entity metadata                            |
 
-For additional parameters and options for each command, please directly consult the commands help, e.g. `bin php/console becklyn:search:client --help`.
+For additional parameters and options for each command, please directly consult the commands help, e.g. `php bin/console becklyn:search:client --help`.
