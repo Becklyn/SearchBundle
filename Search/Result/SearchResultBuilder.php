@@ -2,6 +2,8 @@
 
 namespace Becklyn\SearchBundle\Search\Result;
 
+use Doctrine\Common\Util\ClassUtils;
+
 
 class SearchResultBuilder
 {
@@ -16,7 +18,7 @@ class SearchResultBuilder
     {
         $entity = $hit->getEntity();
         $id = $entity->getId();
-        $entityClass = get_class($entity);
+        $entityClass = ClassUtils::getRealClass(get_class($entity));
 
         if (isset($this->classMapping[$entityClass][$id]))
         {
