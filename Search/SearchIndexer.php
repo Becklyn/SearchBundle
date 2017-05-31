@@ -6,6 +6,7 @@ use Becklyn\SearchBundle\Accessor\EntityValueAccessor;
 use Becklyn\SearchBundle\Elasticsearch\ElasticsearchClient;
 use Becklyn\SearchBundle\Elasticsearch\Request\IndexDocumentRequest;
 use Becklyn\SearchBundle\Entity\SearchableEntityInterface;
+use Becklyn\SearchBundle\Event\BeforeIndexEntityEvent;
 use Becklyn\SearchBundle\Index\Configuration\LanguageConfiguration;
 use Becklyn\SearchBundle\Metadata\Metadata;
 use Doctrine\Common\Util\ClassUtils;
@@ -128,6 +129,10 @@ class SearchIndexer
      */
     private function generateIndexRequest (SearchableEntityInterface $entity)
     {
+        // dispatch event for before indexing the entity
+        $beforeIndexEvent = new BeforeIndexEntityEvent($entity);
+        $this->dispatcher->dispatch($beforeIndexEvent::EVENT, $beforeIndexEvent);
+
         $item = $this->metadata->get(ClassUtils::getClass($entity));
 
         if (null === $item)
