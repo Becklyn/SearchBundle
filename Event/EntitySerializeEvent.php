@@ -6,9 +6,9 @@ use Becklyn\SearchBundle\Entity\SearchableEntityInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 
-class IndexEntityEvent extends Event
+class EntitySerializeEvent extends Event
 {
-    const EVENT = "becklyn_search.index";
+    const EVENT = "becklyn_search.entity.serialize";
 
 
     /**
