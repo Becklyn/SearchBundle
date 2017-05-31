@@ -18,7 +18,7 @@ class SearchResultBuilder
     {
         $entity = $hit->getEntity();
         $id = $entity->getId();
-        $entityClass = ClassUtils::getRealClass(get_class($entity));
+        $entityClass = ClassUtils::getClass($entity);
 
         if (isset($this->classMapping[$entityClass][$id]))
         {

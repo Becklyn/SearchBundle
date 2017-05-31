@@ -8,6 +8,7 @@ use Becklyn\SearchBundle\Elasticsearch\Request\IndexDocumentRequest;
 use Becklyn\SearchBundle\Entity\SearchableEntityInterface;
 use Becklyn\SearchBundle\Index\Configuration\LanguageConfiguration;
 use Becklyn\SearchBundle\Metadata\Metadata;
+use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
@@ -127,7 +128,7 @@ class SearchIndexer
      */
     private function generateIndexRequest (SearchableEntityInterface $entity)
     {
-        $item = $this->metadata->get(get_class($entity));
+        $item = $this->metadata->get(ClassUtils::getClass($entity));
 
         if (null === $item)
         {
