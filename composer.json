@@ -24,6 +24,10 @@
         "symfony/dependency-injection": "^3.0",
         "symfony/event-dispatcher": "^3.0",
         "symfony/framework-bundle": "^3.0",
+        "symfony/monolog-bundle": "^3.2",
         "symfony/property-access": "^3.0"
+    },
+    "config": {
+        "sort-packages": true
     }
 }

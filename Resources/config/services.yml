@@ -159,6 +159,15 @@ services:
             - '@cache.system'
         public: false
 
+    becklyn.search.metadata.factory:
+        class: Becklyn\SearchBundle\Metadata\MetadataFactory
+        arguments:
+            - '@becklyn.search.metadata'
+            - '@becklyn.search.metadata.generator'
+            - '@kernel'
+            - '@logger'
+        public: false
+
     becklyn.search.metadata.generator:
         class: Becklyn\SearchBundle\Metadata\MetadataGenerator
         arguments:

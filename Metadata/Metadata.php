@@ -32,6 +32,12 @@ class Metadata
     private $cache;
 
 
+    /**
+     * @var bool
+     */
+    private $initialized = false;
+
+
 
     /**
      * @param AdapterInterface $cachePool
@@ -44,6 +50,7 @@ class Metadata
         if ($this->cache->isHit())
         {
             $this->items = $this->cache->get();
+            $this->initialized = true;
         }
     }
 
@@ -55,6 +62,7 @@ class Metadata
     {
         $this->items[$item->getFqcn()] = $item;
         $this->updateCache();
+        $this->initialized = true;
     }
 
 
@@ -80,6 +88,7 @@ class Metadata
     {
         $this->items = [];
         $this->updateCache();
+        $this->initialized = false;
     }
 
 
@@ -103,5 +112,14 @@ class Metadata
     public function getAllItems () : SearchItemList
     {
         return new SearchItemList($this->items);
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function isInitialized () : bool
+    {
+        return $this->initialized;
     }
 }
