@@ -4,7 +4,7 @@ services:
         class: Becklyn\SearchBundle\Search\SearchClient
         arguments:
             - '@becklyn.search.elasticsearch'
-            - '@becklyn.search.metadata'
+            - '@becklyn.search.metadata.factory'
             - '@becklyn.search.entity_loader'
             - '@becklyn.search.index.configuration.language'
 
@@ -12,7 +12,7 @@ services:
         class: Becklyn\SearchBundle\Search\SearchIndexer
         arguments:
             - '@becklyn.search.elasticsearch'
-            - '@becklyn.search.metadata'
+            - '@becklyn.search.metadata.factory'
             - '@becklyn.search.index.configuration.language'
             - '@becklyn.search.accessor.entity_value'
             - '@event_dispatcher'
@@ -68,7 +68,7 @@ services:
     becklyn.search.doctrine.event_subscriber:
        class: Becklyn\SearchBundle\Doctrine\DoctrineListener
        arguments:
-           - '@becklyn.search.metadata'
+           - '@becklyn.search.metadata.factory'
            - '@becklyn.search.indexer'
        tags:
            - { name: doctrine.event_subscriber }
@@ -84,7 +84,7 @@ services:
             - '@becklyn.search.api.client_factory'
             - ~ # set via configuration
             - ~ # set via configuration
-            - '@becklyn.search.metadata'
+            - '@becklyn.search.metadata.factory'
         public: false
 
     becklyn.search.api.client_factory:
@@ -116,7 +116,7 @@ services:
         class: Becklyn\SearchBundle\Index\IndexMapping
         arguments:
             - '@becklyn.search.elasticsearch'
-            - '@becklyn.search.metadata'
+            - '@becklyn.search.metadata.factory'
             - '@becklyn.search.index.configuration.analysis'
             - '@becklyn.search.index.configuration.language'
         public: false

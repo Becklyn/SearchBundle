@@ -4,6 +4,7 @@ namespace Becklyn\SearchBundle\Doctrine;
 
 use Becklyn\SearchBundle\Entity\SearchableEntityInterface;
 use Becklyn\SearchBundle\Metadata\Metadata;
+use Becklyn\SearchBundle\Metadata\MetadataFactory;
 use Becklyn\SearchBundle\Metadata\SearchItem;
 use Becklyn\SearchBundle\Search\SearchIndexer;
 use Doctrine\Common\EventSubscriber;
@@ -27,14 +28,13 @@ class DoctrineListener implements EventSubscriber
     private $indexer;
 
 
-
     /**
-     * @param Metadata      $metadata
-     * @param SearchIndexer $indexer
+     * @param MetadataFactory $metadataFactory
+     * @param SearchIndexer   $indexer
      */
-    public function __construct (Metadata $metadata, SearchIndexer $indexer)
+    public function __construct (MetadataFactory $metadataFactory, SearchIndexer $indexer)
     {
-        $this->metadata = $metadata;
+        $this->metadata = $metadataFactory->getMetadata();
         $this->indexer = $indexer;
     }
 

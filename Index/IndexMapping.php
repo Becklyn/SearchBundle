@@ -9,6 +9,7 @@ use Becklyn\SearchBundle\Elasticsearch\Request\IndexDeleteRequest;
 use Becklyn\SearchBundle\Index\Configuration\AnalysisConfiguration;
 use Becklyn\SearchBundle\Index\Configuration\LanguageConfiguration;
 use Becklyn\SearchBundle\Metadata\Metadata;
+use Becklyn\SearchBundle\Metadata\MetadataFactory;
 
 
 /**
@@ -40,17 +41,16 @@ class IndexMapping
     private $languageConfiguration;
 
 
-
     /**
      * @param ElasticsearchClient   $client
-     * @param Metadata              $metadata
+     * @param MetadataFactory       $metadataFactory
      * @param AnalysisConfiguration $analysisConfiguration
      * @param LanguageConfiguration $languageConfiguration
      */
-    public function __construct (ElasticsearchClient $client, Metadata $metadata, AnalysisConfiguration $analysisConfiguration, LanguageConfiguration $languageConfiguration)
+    public function __construct (ElasticsearchClient $client, MetadataFactory $metadataFactory, AnalysisConfiguration $analysisConfiguration, LanguageConfiguration $languageConfiguration)
     {
         $this->client = $client;
-        $this->metadata = $metadata;
+        $this->metadata = $metadataFactory->getMetadata();
         $this->analysisConfiguration = $analysisConfiguration;
         $this->languageConfiguration = $languageConfiguration;
     }

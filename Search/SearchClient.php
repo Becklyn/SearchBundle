@@ -9,6 +9,7 @@ use Becklyn\SearchBundle\Exception\MissingLanguageException;
 use Becklyn\SearchBundle\Index\Configuration\LanguageConfiguration;
 use Becklyn\SearchBundle\Loader\EntityLoader;
 use Becklyn\SearchBundle\Metadata\Metadata;
+use Becklyn\SearchBundle\Metadata\MetadataFactory;
 use Becklyn\SearchBundle\Metadata\SearchItem\SearchItemList;
 use Becklyn\SearchBundle\Search\Result\SearchHit;
 use Becklyn\SearchBundle\Search\Result\SearchResult;
@@ -44,17 +45,16 @@ class SearchClient
     private $languageConfiguration;
 
 
-
     /**
      * @param ElasticsearchClient   $client
-     * @param Metadata              $metadata
+     * @param MetadataFactory       $metadataFactory
      * @param EntityLoader          $entityLoader
      * @param LanguageConfiguration $languageConfiguration
      */
-    public function __construct (ElasticsearchClient $client, Metadata $metadata, EntityLoader $entityLoader, LanguageConfiguration $languageConfiguration)
+    public function __construct (ElasticsearchClient $client, MetadataFactory $metadataFactory, EntityLoader $entityLoader, LanguageConfiguration $languageConfiguration)
     {
         $this->client = $client;
-        $this->allItems = $metadata->getAllItems();
+        $this->allItems = $metadataFactory->getMetadata()->getAllItems();
         $this->entityLoader = $entityLoader;
         $this->languageConfiguration = $languageConfiguration;
     }

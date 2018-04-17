@@ -3,6 +3,7 @@
 namespace Becklyn\SearchBundle\Elasticsearch;
 
 use Becklyn\SearchBundle\Elasticsearch\Request\IndexDocumentRequest;
+use Becklyn\SearchBundle\Metadata\MetadataFactory;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
@@ -35,18 +36,17 @@ class ElasticsearchClient
     private $metadata;
 
 
-
     /**
      * @param ElasticsearchApiFactory $apiFactory
      * @param string                  $host
      * @param string                  $index
-     * @param Metadata                $metadata
+     * @param MetadataFactory         $metadataFactory
      */
-    public function __construct (ElasticsearchApiFactory $apiFactory, string $host, string $index, Metadata $metadata)
+    public function __construct (ElasticsearchApiFactory $apiFactory, string $host, string $index, MetadataFactory $metadataFactory)
     {
         $this->client = $apiFactory->buildApiClient($host);
         $this->index = $index;
-        $this->metadata = $metadata;
+        $this->metadata = $metadataFactory->getMetadata();
     }
 
 

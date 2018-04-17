@@ -9,6 +9,7 @@ use Becklyn\SearchBundle\Entity\SearchableEntityInterface;
 use Becklyn\SearchBundle\Event\BeforeIndexEntityEvent;
 use Becklyn\SearchBundle\Index\Configuration\LanguageConfiguration;
 use Becklyn\SearchBundle\Metadata\Metadata;
+use Becklyn\SearchBundle\Metadata\MetadataFactory;
 use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -56,18 +57,17 @@ class SearchIndexer
     private $dispatcher;
 
 
-
     /**
      * @param ElasticsearchClient      $client
-     * @param Metadata                 $metadata
+     * @param MetadataFactory          $metadataFactory
      * @param LanguageConfiguration    $languageConfiguration
      * @param EntityValueAccessor      $valueAccessor
      * @param EventDispatcherInterface $dispatcher
      */
-    public function __construct (ElasticsearchClient $client, Metadata $metadata, LanguageConfiguration $languageConfiguration, EntityValueAccessor $valueAccessor, EventDispatcherInterface $dispatcher)
+    public function __construct (ElasticsearchClient $client, MetadataFactory $metadataFactory, LanguageConfiguration $languageConfiguration, EntityValueAccessor $valueAccessor, EventDispatcherInterface $dispatcher)
     {
         $this->client = $client;
-        $this->metadata = $metadata;
+        $this->metadata = $metadataFactory->getMetadata();
         $this->accessor = PropertyAccess::createPropertyAccessor();
         $this->languageConfiguration = $languageConfiguration;
         $this->valueAccessor = $valueAccessor;
