@@ -18,7 +18,7 @@ interface SearchableEntityInterface
     /**
      * Returns the time of the last modification of the item
      *
-     * @return \DateTimeInterface
+     * @return \DateTimeImmutable
      */
-    public function getLastModificationTime () : \DateTimeInterface;
+    public function getLastModificationTime () : \DateTimeImmutable;
 }
