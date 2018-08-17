@@ -161,7 +161,7 @@ class IndexCommand extends Command
 
         foreach ($this->kernel->getBundles() as $bundle)
         {
-            $bundleNamespacePrefix = "{$bundle->getName()}\\";
+            $bundleNamespacePrefix = "{$bundle->getNamespace()}\\";
 
             $searchItems = $this->metadataGenerator->rebuildMetadata([
                 $bundleNamespacePrefix => $bundle->getPath(),
