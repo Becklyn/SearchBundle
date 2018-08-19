@@ -57,6 +57,7 @@ class ClassFinder
             ->files()
             ->ignoreUnreadableDirs()
             ->name('*.php')
+            ->exclude(["Tests", "tests", "Test", "test", "Skeleton", "skeleton"])
             ->contains("class ");
 
         $classMap = [];
