@@ -50,19 +50,26 @@ class DebugCommand extends ContainerAwareCommand
             $io->write("<fg=red>not found</>");
         }
 
-        $io->section("Indices");
-        $io->block($this->client->cat()->indices());
+        $sections = [
+            "Indices" => $this->client->cat()->indices(),
+            "Allocation" => $this->client->cat()->allocation(),
+            "Health" => $this->client->cat()->health(),
+            "Master" => $this->client->cat()->master(),
+            "Nodes" => $this->client->cat()->nodes(),
+        ];
 
-        $io->section("Allocation");
-        $io->block($this->client->cat()->allocation());
+        foreach ($sections as $title => $data)
+        {
+            $io->section($title);
 
-        $io->section("Health");
-        $io->block($this->client->cat()->health());
+            if (empty($data))
+            {
+                $io->comment("No data.");
+                continue;
+            }
 
-        $io->section("Master");
-        $io->block($this->client->cat()->master());
-
-        $io->section("Nodes");
-        $io->block($this->client->cat()->nodes());
+            $headers = \array_keys($data[0]);
+            $io->table($headers, $data);
+        }
     }
 }
