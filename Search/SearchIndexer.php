@@ -11,6 +11,7 @@ use Becklyn\SearchBundle\Index\Configuration\LanguageConfiguration;
 use Becklyn\SearchBundle\Metadata\Metadata;
 use Becklyn\SearchBundle\Metadata\MetadataFactory;
 use Doctrine\Common\Util\ClassUtils;
+use Elasticsearch\Common\Exceptions\NoNodesAvailableException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
@@ -87,7 +88,14 @@ class SearchIndexer
 
         if (null !== $request)
         {
-            $this->client->sendRequest($request);
+            try
+            {
+                $this->client->sendRequest($request);
+            }
+            catch (NoNodesAvailableException $exception)
+            {
+                // silently catch exception
+            }
         }
     }
 
