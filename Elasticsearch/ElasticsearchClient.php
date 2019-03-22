@@ -8,6 +8,7 @@ use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
 use Becklyn\SearchBundle\Metadata\Metadata;
+use Elasticsearch\Common\Exceptions\NoNodesAvailableException;
 
 
 /**
@@ -81,6 +82,10 @@ class ElasticsearchClient
                 throw $exception;
             }
 
+            return null;
+        }
+        catch (NoNodesAvailableException $exception)
+        {
             return null;
         }
     }

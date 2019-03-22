@@ -88,14 +88,7 @@ class SearchIndexer
 
         if (null !== $request)
         {
-            try
-            {
-                $this->client->sendRequest($request);
-            }
-            catch (NoNodesAvailableException $exception)
-            {
-                // silently catch exception
-            }
+            $this->client->sendRequest($request);
         }
     }
 
