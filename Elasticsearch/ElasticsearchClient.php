@@ -120,12 +120,13 @@ class ElasticsearchClient
      */
     public function sendBulkIndexRequests (array $requests)
     {
+        /** @var IndexDocumentRequest[] $requests */
+        $requests = \array_values($requests);
         $currentBulk = [];
         $maxIndex = count($requests) - 1;
 
-        for ($i = 0; $i <= $maxIndex; $i++)
+        foreach ($requests as $i => $request)
         {
-            $request = $requests[$i];
             $data = $request->getData();
 
             // add header
