@@ -8,6 +8,7 @@ use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
 use Becklyn\SearchBundle\Metadata\Metadata;
+use Elasticsearch\Common\Exceptions\NoNodesAvailableException;
 
 
 /**
@@ -83,6 +84,10 @@ class ElasticsearchClient
 
             return null;
         }
+        catch (NoNodesAvailableException $exception)
+        {
+            return null;
+        }
     }
 
 
@@ -115,34 +120,42 @@ class ElasticsearchClient
      */
     public function sendBulkIndexRequests (array $requests)
     {
-        $currentBulk = [];
-        $maxIndex = count($requests) - 1;
-
-        for ($i = 0; $i <= $maxIndex; $i++)
+        try
         {
-            $request = $requests[$i];
-            $data = $request->getData();
+            /** @var IndexDocumentRequest[] $requests */
+            $requests = \array_values($requests);
+            $currentBulk = [];
+            $maxIndex = count($requests) - 1;
 
-            // add header
-            $currentBulk[] = [
-                "index" => [
-                    "_index" => $data["index"],
-                    "_type" => $data["type"],
-                    "_id" => $data["id"],
-                ],
-            ];
-
-            // add data
-            $currentBulk[] = $data["body"];
-
-            // every 1000 items -> send
-            if ($i % 1000 === 0 || $i >= $maxIndex)
+            foreach ($requests as $i => $request)
             {
-                $this->client->bulk([
-                    "body" => $currentBulk,
-                ]);
-                $currentBulk = [];
+                $data = $request->getData();
+
+                // add header
+                $currentBulk[] = [
+                    "index" => [
+                        "_index" => $data["index"],
+                        "_type" => $data["type"],
+                        "_id" => $data["id"],
+                    ],
+                ];
+
+                // add data
+                $currentBulk[] = $data["body"];
+
+                // every 1000 items -> send
+                if ($i % 1000 === 0 || $i >= $maxIndex)
+                {
+                    $this->client->bulk([
+                        "body" => $currentBulk,
+                    ]);
+                    $currentBulk = [];
+                }
             }
+        }
+        catch (NoNodesAvailableException $exception)
+        {
+            // silently catch exception
         }
     }
 
