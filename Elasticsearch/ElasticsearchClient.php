@@ -120,35 +120,42 @@ class ElasticsearchClient
      */
     public function sendBulkIndexRequests (array $requests)
     {
-        /** @var IndexDocumentRequest[] $requests */
-        $requests = \array_values($requests);
-        $currentBulk = [];
-        $maxIndex = count($requests) - 1;
-
-        foreach ($requests as $i => $request)
+        try
         {
-            $data = $request->getData();
+            /** @var IndexDocumentRequest[] $requests */
+            $requests = \array_values($requests);
+            $currentBulk = [];
+            $maxIndex = count($requests) - 1;
 
-            // add header
-            $currentBulk[] = [
-                "index" => [
-                    "_index" => $data["index"],
-                    "_type" => $data["type"],
-                    "_id" => $data["id"],
-                ],
-            ];
-
-            // add data
-            $currentBulk[] = $data["body"];
-
-            // every 1000 items -> send
-            if ($i % 1000 === 0 || $i >= $maxIndex)
+            foreach ($requests as $i => $request)
             {
-                $this->client->bulk([
-                    "body" => $currentBulk,
-                ]);
-                $currentBulk = [];
+                $data = $request->getData();
+
+                // add header
+                $currentBulk[] = [
+                    "index" => [
+                        "_index" => $data["index"],
+                        "_type" => $data["type"],
+                        "_id" => $data["id"],
+                    ],
+                ];
+
+                // add data
+                $currentBulk[] = $data["body"];
+
+                // every 1000 items -> send
+                if ($i % 1000 === 0 || $i >= $maxIndex)
+                {
+                    $this->client->bulk([
+                        "body" => $currentBulk,
+                    ]);
+                    $currentBulk = [];
+                }
             }
+        }
+        catch (NoNodesAvailableException $exception)
+        {
+            // silently catch exception
         }
     }
 
