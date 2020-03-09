@@ -19,13 +19,13 @@
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/orm": "^2.5",
         "elasticsearch/elasticsearch": "^5.0",
-        "symfony/cache": "^3.0",
-        "symfony/console": "^3.0",
-        "symfony/dependency-injection": "^3.0",
-        "symfony/event-dispatcher": "^3.0",
-        "symfony/framework-bundle": "^3.0",
+        "symfony/cache": "^3.0|^4.0",
+        "symfony/console": "^3.0|^4.0",
+        "symfony/dependency-injection": "^3.0|^4.0",
+        "symfony/event-dispatcher": "^3.0|^4.0",
+        "symfony/framework-bundle": "^3.0|^4.0",
         "symfony/monolog-bundle": "^2.8|^3.0",
-        "symfony/property-access": "^3.0"
+        "symfony/property-access": "^3.0|^4.0"
     },
     "config": {
         "sort-packages": true
