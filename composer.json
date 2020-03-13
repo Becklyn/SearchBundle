@@ -1,16 +1,15 @@
 {
-    "name":         "becklyn/search-bundle",
-    "description":  "Simply and automatically power your Symfony projects with Elasticsearch.",
-    "type":         "symfony-bundle",
-    "homepage":     "https://github.com/Becklyn/SearchBundle",
-    "license":      "BSD-3-Clause",
-    "authors": [{
-        "name":     "Becklyn Studios",
-        "homepage": "http://becklyn.com/"
-    }],
-    "autoload": {
-        "psr-4": { "Becklyn\\SearchBundle\\": "" }
-    },
+    "name": "becklyn/search-bundle",
+    "type": "symfony-bundle",
+    "description": "Simply and automatically power your Symfony projects with Elasticsearch.",
+    "homepage": "https://github.com/Becklyn/SearchBundle",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Becklyn Studios",
+            "homepage": "http://becklyn.com/"
+        }
+    ],
     "require": {
         "php": "^7.0",
         "becklyn/interfaces": "^1.0",
@@ -19,15 +18,20 @@
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/orm": "^2.5",
         "elasticsearch/elasticsearch": "^5.0",
-        "symfony/cache": "^3.0",
-        "symfony/console": "^3.0",
-        "symfony/dependency-injection": "^3.0",
-        "symfony/event-dispatcher": "^3.0",
-        "symfony/framework-bundle": "^3.0",
-        "symfony/monolog-bundle": "^2.8|^3.0",
-        "symfony/property-access": "^3.0"
+        "symfony/cache": "^3.0 || ^4.0",
+        "symfony/console": "^3.0 || ^4.0",
+        "symfony/dependency-injection": "^3.0 || ^4.0",
+        "symfony/event-dispatcher": "^3.0 || ^4.0",
+        "symfony/framework-bundle": "^3.0 || ^4.0",
+        "symfony/monolog-bundle": "^2.8 || ^3.0",
+        "symfony/property-access": "^3.0 || ^4.0"
     },
     "config": {
         "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "Becklyn\\SearchBundle\\": ""
+        }
     }
 }
