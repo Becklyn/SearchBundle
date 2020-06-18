@@ -143,8 +143,8 @@ class ElasticsearchClient
                 // add data
                 $currentBulk[] = $data["body"];
 
-                // every 1000 items -> send
-                if ($i % 1000 === 0 || $i >= $maxIndex)
+                // every 250 items -> send
+                if ($i % 250 === 0 || $i >= $maxIndex)
                 {
                     $this->client->bulk([
                         "body" => $currentBulk,
