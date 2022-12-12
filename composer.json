@@ -11,20 +11,19 @@
         }
     ],
     "require": {
-        "php": "^7.0",
-        "becklyn/interfaces": "^1.0",
-        "becklyn/search-text-transformer": "^1.0",
-        "doctrine/common": "^2.6",
-        "doctrine/doctrine-bundle": "^1.6",
-        "doctrine/orm": "^2.5",
-        "elasticsearch/elasticsearch": "^5.0",
-        "symfony/cache": "^3.0 || ^4.0",
-        "symfony/console": "^3.0 || ^4.0",
-        "symfony/dependency-injection": "^3.0 || ^4.0",
-        "symfony/event-dispatcher": "^3.0 || ^4.0",
-        "symfony/framework-bundle": "^3.0 || ^4.0",
-        "symfony/monolog-bundle": "^2.8 || ^3.0",
-        "symfony/property-access": "^3.0 || ^4.0"
+        "php": ">=8.1",
+        "becklyn/search-text-transformer": "^2.0.0",
+        "doctrine/common": "^3.4.2",
+        "doctrine/doctrine-bundle": "^2.7.0",
+        "doctrine/orm": "^2.13.4",
+        "elasticsearch/elasticsearch": "v8.5.3",
+        "symfony/cache": "^v6.2.0",
+        "symfony/console": "v6.2.1",
+        "symfony/dependency-injection": "v6.2.1",
+        "symfony/event-dispatcher": "v6.2.0",
+        "symfony/framework-bundle": "v6.2.1",
+        "symfony/monolog-bundle": "^v3.8.0",
+        "symfony/property-access": "^v6.2.0"
     },
     "config": {
         "sort-packages": true
