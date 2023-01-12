@@ -39,9 +39,7 @@ class SomeEntity implements SearchableEntityInterface
 For localized entities, mark the class and implement the `LocalizedSearchableEntityInterface` interface:
 
 ```php
-use Becklyn\Interfaces\LanguageInterface;
-use Becklyn\SearchBundle\Entity\LocalizedSearchableEntityInterface;
-use Becklyn\SearchBundle\Mapping as Search;
+use Becklyn\SearchBundle\Entity\LanguageInterface;use Becklyn\SearchBundle\Entity\LocalizedSearchableEntityInterface;use Becklyn\SearchBundle\Mapping as Search;
 
 /**
  * @Search\Item(
@@ -60,8 +58,6 @@ class LocalizedSomeEntity implements LocalizedSearchableEntityInterface
     }
 }
 ```
-
-Note: you will need the `LanguageInterface` from the [`becklyn/interfaces`](https://github.com/Becklyn/Interfaces) package.
 
 #### `@Search\Item()` annotation
 

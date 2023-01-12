@@ -2,8 +2,6 @@
 
 namespace Becklyn\SearchBundle\Search\Result;
 
-use Becklyn\Interfaces\LanguageInterface;
-
 
 /**
  * A list of all search hits for a specific entity

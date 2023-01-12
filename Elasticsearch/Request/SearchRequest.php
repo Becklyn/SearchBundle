@@ -2,9 +2,9 @@
 
 namespace Becklyn\SearchBundle\Elasticsearch\Request;
 
-use Becklyn\Interfaces\LanguageInterface;
 use Becklyn\SearchBundle\Elasticsearch\ElasticsearchClient;
 use Becklyn\SearchBundle\Elasticsearch\ElasticsearchRequest;
+use Becklyn\SearchBundle\Entity\LanguageInterface;
 use Becklyn\SearchBundle\Metadata\SearchItem;
 
 

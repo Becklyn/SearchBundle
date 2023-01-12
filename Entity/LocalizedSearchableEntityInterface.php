@@ -2,8 +2,6 @@
 
 namespace Becklyn\SearchBundle\Entity;
 
-use Becklyn\Interfaces\LanguageInterface;
-
 
 /**
  * Describes searchable entities, that are localized

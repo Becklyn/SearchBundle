@@ -2,7 +2,7 @@
 
 namespace Becklyn\SearchBundle\Command;
 
-use Becklyn\Interfaces\LanguageInterface;
+use Becklyn\SearchBundle\Entity\LanguageInterface;
 use Becklyn\SearchBundle\Search\Result\EntitySearchHits;
 use Becklyn\SearchBundle\Search\Result\SearchHit;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;

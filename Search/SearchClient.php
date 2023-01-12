@@ -2,13 +2,12 @@
 
 namespace Becklyn\SearchBundle\Search;
 
-use Becklyn\Interfaces\LanguageInterface;
 use Becklyn\SearchBundle\Elasticsearch\ElasticsearchClient;
 use Becklyn\SearchBundle\Elasticsearch\Request\SearchRequest;
+use Becklyn\SearchBundle\Entity\LanguageInterface;
 use Becklyn\SearchBundle\Exception\MissingLanguageException;
 use Becklyn\SearchBundle\Index\Configuration\LanguageConfiguration;
 use Becklyn\SearchBundle\Loader\EntityLoader;
-use Becklyn\SearchBundle\Metadata\Metadata;
 use Becklyn\SearchBundle\Metadata\MetadataFactory;
 use Becklyn\SearchBundle\Metadata\SearchItem\SearchItemList;
 use Becklyn\SearchBundle\Search\Result\SearchHit;
