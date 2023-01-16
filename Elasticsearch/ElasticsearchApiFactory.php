@@ -2,21 +2,15 @@
 
 namespace Becklyn\SearchBundle\Elasticsearch;
 
-use Elasticsearch\Client;
-use Elasticsearch\ClientBuilder;
+use Elastic\Elasticsearch\Client;
+use Elastic\Elasticsearch\ClientBuilder;
 
 
 class ElasticsearchApiFactory
 {
-    /**
-     * Builds the API client
-     *
-     * @param string $host
-     *
-     * @return Client
-     */
     public function buildApiClient (string $host) : Client
     {
+
         $builder = ClientBuilder::create()
             ->setHosts([$host]);
         $this->addOptionsToClientBuilder($builder);

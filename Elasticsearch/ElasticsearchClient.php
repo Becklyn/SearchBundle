@@ -4,8 +4,7 @@ namespace Becklyn\SearchBundle\Elasticsearch;
 
 use Becklyn\SearchBundle\Elasticsearch\Request\IndexDocumentRequest;
 use Becklyn\SearchBundle\Metadata\MetadataFactory;
-use Elasticsearch\Client;
-use Elasticsearch\ClientBuilder;
+use Elastic\Elasticsearch\Client;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
 use Becklyn\SearchBundle\Metadata\Metadata;
 use Elasticsearch\Common\Exceptions\NoNodesAvailableException;
