@@ -1,15 +1,15 @@
 {
     "name": "becklyn/search-bundle",
-    "type": "symfony-bundle",
     "description": "Simply and automatically power your Symfony projects with Elasticsearch.",
-    "homepage": "https://github.com/Becklyn/SearchBundle",
     "license": "BSD-3-Clause",
+    "type": "symfony-bundle",
     "authors": [
         {
             "name": "Becklyn Studios",
             "homepage": "http://becklyn.com/"
         }
     ],
+    "homepage": "https://github.com/Becklyn/SearchBundle",
     "require": {
         "php": ">=7.0",
         "becklyn/search-text-transformer": "^2.0",
@@ -25,12 +25,12 @@
         "symfony/monolog-bundle": "^2.8 || ^3.0 || ^5.0",
         "symfony/property-access": "^3.0 || ^4.0 || ^5.0"
     },
-    "config": {
-        "sort-packages": true
-    },
     "autoload": {
         "psr-4": {
             "Becklyn\\SearchBundle\\": ""
         }
+    },
+    "config": {
+        "sort-packages": true
     }
 }
