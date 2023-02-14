@@ -6,13 +6,13 @@ use Becklyn\SearchBundle\Entity\SearchableEntityInterface;
 use Becklyn\SearchBundle\Exception\InvalidSearchConfigurationException;
 use Becklyn\SearchBundle\Mapping\Filter;
 use Becklyn\SearchBundle\Metadata\SearchItemFilter;
-use Doctrine\Common\Annotations\AnnotationReader;
 use Becklyn\SearchBundle\Entity\LocalizedSearchableEntityInterface;
 use Becklyn\SearchBundle\LanguageIntegration\AccessiblePropertyCollector;
 use Becklyn\SearchBundle\Mapping\Field;
 use Becklyn\SearchBundle\Mapping\Item;
 use Becklyn\SearchBundle\Metadata\SearchItem;
 use Becklyn\SearchBundle\Metadata\SearchItemField;
+use Doctrine\Common\Annotations\AnnotationReader;
 
 
 /**

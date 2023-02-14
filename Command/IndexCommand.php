@@ -7,8 +7,8 @@ use Becklyn\SearchBundle\Loader\EntityLoader;
 use Becklyn\SearchBundle\Metadata\Metadata;
 use Becklyn\SearchBundle\Metadata\MetadataGenerator;
 use Becklyn\SearchBundle\Search\SearchIndexer;
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManager;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -68,7 +68,7 @@ class IndexCommand extends Command
      * @param IndexMapping      $indexMapping
      * @param SearchIndexer     $indexer
      * @param EntityLoader      $entityLoader
-     * @param Registry          $doctrine
+     * @param ManagerRegistry          $doctrine
      *
      * @internal param MetadataGenerator $generator
      */
@@ -79,7 +79,7 @@ class IndexCommand extends Command
         IndexMapping $indexMapping,
         SearchIndexer $indexer,
         EntityLoader $entityLoader,
-        Registry $doctrine
+        ManagerRegistry $doctrine
     )
     {
         parent::__construct("becklyn:search:index");
