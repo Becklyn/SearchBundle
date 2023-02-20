@@ -159,7 +159,10 @@ class IndexCommand extends Command
     {
         $io->section("Refreshing the metadata");
 
-        foreach ($this->kernel->getBundles() as $bundle)
+        $bundles = $this->kernel->getBundles();
+        unset($bundles["DoctrineBundle"], $bundles["SentryBundle"], $bundles["BecklynHostingBundle"]);
+
+        foreach ($bundles as $bundle)
         {
             $bundleNamespacePrefix = "{$bundle->getNamespace()}\\";
 
